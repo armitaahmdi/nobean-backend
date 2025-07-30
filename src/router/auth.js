@@ -198,7 +198,7 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *                   example: "خطا در سرور"
  */
 
-router.post("/complitث-profile",authMiddleware,validatComplitProfile  ,authController.compitProfile)
+router.post("/complit-profile",authMiddleware,validatComplitProfile  ,authController.compitProfile)
 router.patch("/profile",authMiddleware,authController.editProfile)
 
 module.exports = router

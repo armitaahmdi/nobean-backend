@@ -46,7 +46,7 @@ const router = express.Router()
  *                   example: "خطا در ارسال کد تایید"
  */
 
-router.post("/sms/sendCode" , authController.sendOtp)
+router.post("/sendOtp" , authController.sendOtp)
 /**
  * @swagger
  * /verify-otp:
@@ -99,7 +99,7 @@ router.post("/sms/sendCode" , authController.sendOtp)
  *                   example: "کد یا شماره اشتباه است."
  */
 
-router.post("/verify-otp" , authController.verifyOtp)
+router.post("/verifyOtp" , authController.verifyOtp)
 /**
  * @swagger
  * /complit-profile:
@@ -198,7 +198,7 @@ router.post("/verify-otp" , authController.verifyOtp)
  *                   example: "خطا در سرور"
  */
 
-router.post("/complit-profile",authMiddleware,validatComplitProfile  ,authController.compitProfile)
-router.patch("/edit-profile",authMiddleware,authController.editProfile)
+router.post("/complitث-profile",authMiddleware,validatComplitProfile  ,authController.compitProfile)
+router.patch("/profile",authMiddleware,authController.editProfile)
 
 module.exports = router

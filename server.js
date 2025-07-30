@@ -24,7 +24,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use("/tests", testRouter)
-app.use("/send", authRouter)
+app.use("/users", authRouter)
 
 
 

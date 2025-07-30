@@ -17,7 +17,7 @@ db.Categorytest = require('./categoryTestModel')(sequelize, DataTypes);
 //db.testUser = require('./testUserModel')(sequelize, DataTypes);
 db.CourseUser = require('./courseUserModel')(sequelize, DataTypes);
 db.CategoryCourse = require('./categoryCourseModel')(sequelize, DataTypes);
-
+db.userTest = require('./userTestModel')(sequelize, DataTypes);
 // Many-to-Many => User <-> Course via course_user
 db.User.belongsToMany(db.Course, {
   through: db.CourseUser,

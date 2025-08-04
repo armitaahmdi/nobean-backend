@@ -6,6 +6,7 @@ const test = db.test
 const question = db.Question
 const  categoryTest = db.Categorytest
 const Items = db.Item
+const userTest = db.userTest
 
 exports.getAll = async (req , res) => {
   try {
@@ -20,9 +21,17 @@ exports.getAll = async (req , res) => {
    for(const t of tests ){
     const qouestions = await question.findAll({where:{
       examId : t.id
+    
     }})
+    const  participants = await userTest.findAll({where:{
+          examId : t.id
+    }})
+
+
     const question_count = qouestions.length
-   
+    
+
+    const participantCount = participants.length
 
    testresult.push({
     id : t.id,
@@ -32,7 +41,9 @@ exports.getAll = async (req , res) => {
     price:t.price,
     target_audience:t.target_audience,
     category: t.category,
-    question_count
+    time:t.time,
+    question_count,
+    participantCount
    })
    }
 
@@ -86,8 +97,13 @@ const id = req.params.id
     const question_count = qouestions.length
 
 
-  //  برای participants  باید یه الگریتیم از  user  گرفته بشه  
-   
+     const  participants = await userTest.findAll({where:{
+          examId : id
+    }})
+
+       const participantCount = participants.length
+
+
 const categrys = await categoryTest.findAll({where:{testId:id }})
 
 
@@ -104,7 +120,8 @@ const categrys = await categoryTest.findAll({where:{testId:id }})
      const result = {
       ...testData.toJSON(),
       question_count,
-      categrys
+      categrys,
+      participantCount
     };
 
     res.status(200).json(result);

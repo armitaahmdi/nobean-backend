@@ -3,14 +3,27 @@ const app = express();
 const sequelize = require('./config/db');
 const  sessions = require("express-session")
 const cors = require('cors');
+const helmet = require("helmet")
 const authRouter = require("./src/router/auth")
 const testRouter = require("./src/router/testRouter")
-
+require('dotenv').config();
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر درست بده
 app.use(express.json())
+app.use(helmet());
+
+const corsOptions = {
+  origin: 'https://be77517b64ae.ngrok-free.app', // همه دامنه‌ها مجاز
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'  , 'PUT'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 
-app.use(cors());
+
+//app.options('*', cors(corsOptions));
+
 app.use(sessions({
   secret:"sldkflsdfskdjflksjdfk",
   resave:false,
@@ -23,15 +36,8 @@ app.use(sessions({
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
-app.use("/tests", testRouter)
-app.use("/users", authRouter)
-
-
-
-
-    
-
-
+app.use("/api/v1/tests", testRouter)
+app.use("/api/v1/users", authRouter)
 
 
 

@@ -6,12 +6,12 @@ const  {validatComplitProfile} = require("./../utils/validat/userProfile")
 const router = express.Router()
 /**
  * @swagger
- * /sms/sendCode:
+ * /api/v1/users/send-otp:
  *   post:
- *     summary: ارسال کد تایید (OTP) به شماره موبایل
- *     tags: [Auth]
+ *     summary: ارسال کد تایید (OTP) به شماره موبایل کاربر
+ *     tags:
+ *       - Auth
  *     requestBody:
- *       description: شماره موبایل برای ارسال کد تایید
  *       required: true
  *       content:
  *         application/json:
@@ -22,7 +22,8 @@ const router = express.Router()
  *             properties:
  *               phone:
  *                 type: string
- *                 example: "09123456789"
+ *                 description: شماره موبایل کاربر برای ارسال کد تایید
+ *                 example: "09121234567"
  *     responses:
  *       200:
  *         description: کد تایید با موفقیت ارسال شد
@@ -45,16 +46,15 @@ const router = express.Router()
  *                   type: string
  *                   example: "خطا در ارسال کد تایید"
  */
-
-router.post("/sendOtp" , authController.sendOtp)
+router.post("/send-otp" , authController.sendOtp)
 /**
  * @swagger
- * /verify-otp:
+ * /api/v1/users/verify-otp:
  *   post:
- *     summary: تایید کد OTP و دریافت توکن دسترسی
- *     tags: [Auth]
+ *     summary: تایید کد OTP و ورود یا ثبت‌نام کاربر
+ *     tags:
+ *       - Auth
  *     requestBody:
- *       description: ارسال کد تایید و شماره موبایل برای احراز هویت
  *       required: true
  *       content:
  *         application/json:
@@ -66,13 +66,15 @@ router.post("/sendOtp" , authController.sendOtp)
  *             properties:
  *               code:
  *                 type: string
+ *                 description: کد OTP ارسال شده به موبایل
  *                 example: "12345"
  *               phone:
  *                 type: string
- *                 example: "09123456789"
+ *                 description: شماره موبایل کاربر
+ *                 example: "09121234567"
  *     responses:
  *       200:
- *         description: کد تایید موفقیت‌آمیز بود و توکن ارسال شد
+ *         description: کد OTP تایید شد و توکن JWT صادر شد
  *         content:
  *           application/json:
  *             schema:
@@ -83,12 +85,12 @@ router.post("/sendOtp" , authController.sendOtp)
  *                   example: true
  *                 token:
  *                   type: string
- *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   description: توکن دسترسی (JWT)
  *                 message:
  *                   type: string
  *                   example: "OTP verified successfully"
  *       401:
- *         description: اطلاعات ناقص یا کد/شماره اشتباه است
+ *         description: اطلاعات ناقص یا کد/شماره موبایل اشتباه است
  *         content:
  *           application/json:
  *             schema:
@@ -99,17 +101,17 @@ router.post("/sendOtp" , authController.sendOtp)
  *                   example: "کد یا شماره اشتباه است."
  */
 
-router.post("/verifyOtp" , authController.verifyOtp)
+router.post("/verify-otp" , authController.verifyOtp)
 /**
  * @swagger
- * /complit-profile:
+ * /api/v1/users/profile:
  *   post:
- *     summary: تکمیل پروفایل کاربر (نیاز به احراز هویت)
- *     tags: [Auth]
+ *     summary: تکمیل پروفایل کاربر (فقط کاربران وارد شده)
+ *     tags:
+ *       - User
  *     security:
  *       - bearerAuth: []
  *     requestBody:
- *       description: اطلاعات کامل پروفایل کاربر و اطلاعات مربوط به والدین (در صورت وجود)
  *       required: true
  *       content:
  *         application/json:
@@ -118,25 +120,25 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *             properties:
  *               firstName:
  *                 type: string
- *                 example: "حسین"
+ *                 example: "علی"
  *               lastName:
  *                 type: string
- *                 example: "بخشی"
+ *                 example: "محمدی"
  *               userName:
  *                 type: string
- *                 example: "hosseinbakhshi"
+ *                 example: "ali_m"
  *               password:
  *                 type: string
- *                 example: "123456"
+ *                 example: "password123"
  *               copassword:
  *                 type: string
- *                 example: "123456"
+ *                 example: "password123"
  *               email:
  *                 type: string
- *                 example: "hossein@example.com"
+ *                 example: "ali@example.com"
  *               age:
  *                 type: integer
- *                 example: 25
+ *                 example: 30
  *               isParent:
  *                 type: boolean
  *                 example: true
@@ -145,7 +147,7 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *                 example: "09121234567"
  *               isFather:
  *                 type: boolean
- *                 example: true
+ *                 example: false
  *             required:
  *               - firstName
  *               - lastName
@@ -154,7 +156,6 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *               - copassword
  *               - email
  *               - age
- *               - isParent
  *     responses:
  *       200:
  *         description: پروفایل با موفقیت تکمیل شد
@@ -167,7 +168,7 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *                   type: string
  *                   example: "پروفایل با موفقیت تکمیل شد"
  *       400:
- *         description: آپدیت انجام نشد
+ *         description: خطا در به‌روزرسانی یا اعتبارسنجی داده‌ها
  *         content:
  *           application/json:
  *             schema:
@@ -177,7 +178,7 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *                   type: string
  *                   example: "آپدیت انجام نشد"
  *       404:
- *         description: کاربری با شماره داده شده یافت نشد
+ *         description: کاربر با شماره کودک یافت نشد
  *         content:
  *           application/json:
  *             schema:
@@ -197,8 +198,86 @@ router.post("/verifyOtp" , authController.verifyOtp)
  *                   type: string
  *                   example: "خطا در سرور"
  */
+router.post("/profile", authMiddleware, validatComplitProfile, authController.compitProfile);
+/**
+ * @swagger
+ * /api/v1/users/profile:
+ *   patch:
+ *     summary: ویرایش اطلاعات پروفایل کاربر (فقط کاربران وارد شده)
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "علی"
+ *               lastName:
+ *                 type: string
+ *                 example: "محمدی"
+ *               userName:
+ *                 type: string
+ *                 example: "ali_m"
+ *               email:
+ *                 type: string
+ *                 example: "ali@example.com"
+ *               ega:
+ *                 type: integer
+ *                 example: 30
+ *     responses:
+ *       200:
+ *         description: پروفایل با موفقیت ویرایش شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Profile updated successfully"
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     userName:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     ega:
+ *                       type: integer
+ *       404:
+ *         description: کاربر یافت نشد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User not found"
+ *       500:
+ *         description: خطا در سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.patch("/profile", authMiddleware, authController.editProfile);
 
-router.post("/complit-profile",authMiddleware,validatComplitProfile  ,authController.compitProfile)
-router.patch("/profile",authMiddleware,authController.editProfile)
 
 module.exports = router

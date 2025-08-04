@@ -4,18 +4,16 @@ const  isAdmin = require("./../middelware/isAdmin")
 const express= require("express")
 
 const router = express.Router()
-
-
 /**
  * @swagger
- * /test:
+ * /api/v1/tests:
  *   get:
- *     summary: دریافت لیست 100 آزمون آخر
- *     tags: [Test]
- *     description: این API لیست 100 آزمون آخر ایجاد شده را همراه با تعداد سوالات هر آزمون بازمی‌گرداند.
+ *     summary: دریافت همه تست‌ها
+ *     tags:
+ *       - Tests
  *     responses:
  *       200:
- *         description: لیست آزمون‌ها با موفقیت دریافت شد
+ *         description: لیست تست‌ها به همراه اطلاعات تکمیلی
  *         content:
  *           application/json:
  *             schema:
@@ -24,42 +22,58 @@ const router = express.Router()
  *                 type: object
  *                 properties:
  *                   id:
- *                     type: string
- *                     example: "123"
+ *                     type: integer
+ *                     example: 1
  *                   title:
  *                     type: string
- *                     example: "آزمون ریاضی پایه نهم"
+ *                     example: "Test title"
  *                   imagepath:
  *                     type: string
- *                     example: "/uploads/images/math.jpg"
+ *                     example: "/images/test1.png"
  *                   shortDescription:
  *                     type: string
- *                     example: "آزمونی برای مرور مفاهیم پایه‌ای ریاضی"
+ *                     example: "توضیح کوتاه تست"
  *                   price:
  *                     type: number
- *                     example: 29000
+ *                     example: 10000
  *                   target_audience:
  *                     type: string
- *                     example: "دانش‌آموزان پایه نهم"
+ *                     example: "دانش‌آموزان"
  *                   category:
  *                     type: string
  *                     example: "ریاضی"
- *                   question_count:
+ *                   time:
  *                     type: number
- *                     example: 25
+ *                     example: 90 
+ *                   question_count:
+ *                     type: integer
+ *                     example: 30
+ *                   participantCount:
+ *                     type: integer
+ *                     example: 100
  *       500:
- *         description: خطا در سرور هنگام دریافت آزمون‌ها
+ *         description: خطا در دریافت تست‌ها
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "مشکلی در دریافت تست‌ها به وجود آمد."
  */
+
 
 router.get("/",testController.getAll)
 /**
  * @swagger
- * /test/createtest:
+ * /api/v1/tests:
  *   post:
- *     summary: ایجاد آزمون جدید (فقط برای ادمین‌ها)
- *     tags: [Test]
+ *     summary: ایجاد یک تست جدید (فقط ادمین‌ها)
+ *     tags:
+ *       - Tests
  *     security:
- *       - bearerAuth: []
+ *       - bearerAuth: []   # فرض بر این که توکن JWT یا مشابه استفاده می‌کنی
  *     requestBody:
  *       required: true
  *       content:
@@ -79,43 +93,43 @@ router.get("/",testController.getAll)
  *             properties:
  *               title:
  *                 type: string
- *                 example: "آزمون فیزیک پیشرفته"
+ *                 example: "آزمون ریاضی پایه دهم"
  *               time:
- *                 type: number
- *                 example: 60
+ *                 type: string
+ *                 example: "90 دقیقه"
  *               date:
  *                 type: string
  *                 format: date
  *                 example: "2025-08-01"
  *               mainDescription:
  *                 type: string
- *                 example: "این آزمون شامل سوالات مفهومی و محاسباتی فیزیک است."
+ *                 example: "توضیحات کامل آزمون"
  *               ShortDescription:
  *                 type: string
- *                 example: "آزمون برای دانش‌آموزان کنکوری"
+ *                 example: "توضیح کوتاه آزمون"
  *               target_audience:
  *                 type: string
- *                 example: "پایه دوازدهم"
+ *                 example: "دانش‌آموزان پایه دهم"
  *               price:
  *                 type: number
- *                 example: 45000
+ *                 example: 15000
  *               category:
  *                 type: string
- *                 example: "فیزیک"
+ *                 example: "ریاضی"
  *               imagepath:
  *                 type: string
- *                 example: "/uploads/images/physics.jpg"
+ *                 example: "/images/test10.png"
  *               suitableFor:
- *                 type: string
- *                 example: "کنکور تجربی"
+ *                 type: array
+ *                 example: ["والدین","دانش‌آموزان کنکوری"]
  *               tags:
  *                 type: array
  *                 items:
  *                   type: string
- *                 example: ["فیزیک", "مفهومی", "تست زمان‌دار"]
+ *                 example: ["ریاضی", "پایه دهم"]
  *     responses:
  *       201:
- *         description: آزمون با موفقیت ایجاد شد
+ *         description: تست با موفقیت ایجاد شد
  *         content:
  *           application/json:
  *             schema:
@@ -126,112 +140,147 @@ router.get("/",testController.getAll)
  *                   example: "تست با موفقیت ایجاد شد"
  *                 test:
  *                   type: object
- *                   description: اطلاعات آزمون ایجاد شده
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 123
+ *                     title:
+ *                       type: string
+ *                       example: "آزمون ریاضی پایه دهم"
+ *                     // بقیه فیلدهای تست جدید که برگشت داده میشه
  *       400:
- *         description: فیلدهای ضروری ناقص هستند
- *       401:
- *         description: عدم احراز هویت
- *       403:
- *         description: فقط ادمین‌ها مجاز به ایجاد آزمون هستند
- *       500:
- *         description: خطای سرور هنگام ایجاد آزمون
- */
-
-router.post("/" ,authMiddleware,isAdmin, testController.createTest)
-/**
- * @swagger
- * /test/{id}:
- *   get:
- *     summary: دریافت اطلاعات یک آزمون با آیدی
- *     tags: [Test]
- *     description: این API اطلاعات کامل یک آزمون خاص را همراه با تعداد سوالات و دسته‌بندی‌ها بازمی‌گرداند.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: آیدی آزمون مورد نظر
- *         schema:
- *           type: string
- *           example: "a1b2c3d4"
- *     responses:
- *       200:
- *         description: اطلاعات آزمون با موفقیت دریافت شد
+ *         description: خطا در ورودی (فیلدهای ضروری پر نشده)
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 error:
  *                   type: string
- *                   example: "a1b2c3d4"
- *                 title:
- *                   type: string
- *                   example: "آزمون زیست پایه یازدهم"
- *                 shortDescription:
- *                   type: string
- *                   example: "مروری بر مباحث مهم فصل 3"
- *                 mainDescription:
- *                   type: string
- *                   example: "این آزمون شامل سوالات مفهومی زیست‌شناسی می‌باشد."
- *                 imagePath:
- *                   type: string
- *                   example: "/uploads/images/biology.jpg"
- *                 participants:
- *                   type: number
- *                   example: 125
- *                 target_audience:
- *                   type: string
- *                   example: "دانش‌آموزان یازدهم"
- *                 price:
- *                   type: number
- *                   example: 39000
- *                 suitablefor:
- *                   type: string
- *                   example: "دانش‌آموزان مدارس خاص"
- *                 tags:
- *                   type: array
- *                   items:
- *                     type: string
- *                   example: ["زیست", "فصل3", "تجربی"]
- *                 question_count:
- *                   type: number
- *                   example: 20
- *                 categrys:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                       name:
- *                         type: string
- *                   example:
- *                     - id: "cat1"
- *                       name: "زیست"
- *                     - id: "cat2"
- *                       name: "تجربی"
- *       404:
- *         description: تست پیدا نشد
+ *                   example: "لطفاً تمام فیلدها را پر کنید."
  *       500:
- *         description: خطا در سرور
+ *         description: خطا در سرور هنگام ایجاد تست
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "مشکلی در ایجاد تست‌ها به وجود آمد."
  */
-
-router.get("/:id" ,testController.getTest)
+router.post("/", authMiddleware, isAdmin, testController.createTest);
 /**
  * @swagger
- * /api/tests/{id}:
- *   delete:
- *     summary: حذف یک تست با شناسه مشخص
- *     tags: [Tests]
- *     security:
- *       - bearerAuth: []
+ * /api/v1/tests/{id}:
+ *   get:
+ *     summary: دریافت جزئیات یک تست بر اساس شناسه
+ *     tags:
+ *       - Tests
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: شناسه تست برای حذف
+ *         description: شناسه تست
+ *         example: 123
+ *     responses:
+ *       200:
+ *         description: جزئیات تست به همراه تعداد سوالات، شرکت‌کنندگان و دسته‌بندی‌ها
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 123
+ *                 title:
+ *                   type: string
+ *                   example: "آزمون ریاضی پایه دهم"
+ *                 shortDescription:
+ *                   type: string
+ *                   example: "توضیح کوتاه آزمون"
+ *                 mainDescription:
+ *                   type: string
+ *                   example: "توضیحات کامل آزمون"
+ *                 imagePath:
+ *                   type: string
+ *                   example: "/images/test10.png"
+ *                 participants:
+ *                   type: integer
+ *                   example: 100
+ *                 target_audience:
+ *                   type: string
+ *                   example: "دانش‌آموزان پایه دهم"
+ *                 price:
+ *                   type: number
+ *                   example: 15000
+ *                 suitablefor:
+ *                   type: string
+ *                   example: ["دانش آموزان","والدین"] 
+ *                 tags:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["ریاضی", "پایه دهم"]
+ *                 question_count:
+ *                   type: integer
+ *                   example: 30
+ *                 categrys:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         example: "دسته‌بندی ۱"
+ *                 participantCount:
+ *                   type: integer
+ *                   example: 100
+ *       404:
+ *         description: تست مورد نظر پیدا نشد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "تست مورد نظر پیدا نشد."
+ *       500:
+ *         description: خطا در پیدا کردن تست
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "مشکلی در پیدا کردن تست به وجود آمده"
+ */
+router.get("/:id" ,testController.getTest)
+/**
+ * @swagger
+ * /api/v1/tests/{id}:
+ *   delete:
+ *     summary: حذف یک تست (فقط برای ادمین‌ها)
+ *     tags:
+ *       - Tests
+ *     security:
+ *       - bearerAuth: []  # نیاز به توکن برای احراز هویت
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: شناسه‌ی تستی که باید حذف شود
+ *         schema:
+ *           type: integer
+ *           example: 123
  *     responses:
  *       200:
  *         description: تست با موفقیت حذف شد
@@ -242,7 +291,7 @@ router.get("/:id" ,testController.getTest)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: تست با موفقیت حذف شد.
+ *                   example: "تست با موفقیت حذف شد."
  *       404:
  *         description: تستی با این شناسه یافت نشد
  *         content:
@@ -252,7 +301,7 @@ router.get("/:id" ,testController.getTest)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: تستی با این شناسه یافت نشد.
+ *                   example: "تستی با این شناسه یافت نشد."
  *       500:
  *         description: خطایی در حذف تست رخ داد
  *         content:
@@ -262,28 +311,27 @@ router.get("/:id" ,testController.getTest)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: خطایی در حذف تست رخ داد.
+ *                   example: "خطایی در حذف تست رخ داد."
  */
-
-router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
+router.delete("/:id", authMiddleware, isAdmin, testController.deleteTest);
 /**
  * @swagger
- * /test/create-test/{id}:
+ * /api/v1/tests/{id}/questions:
  *   post:
- *     summary: افزودن سوال جدید به آزمون (فقط ادمین)
- *     tags: [Test]
+ *     summary: افزودن سوال جدید به یک تست خاص (فقط ادمین‌ها)
+ *     tags:
+ *       - Tests
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: شناسه آزمونی که سوال به آن اضافه می‌شود
  *         schema:
- *           type: string
- *           example: "123abc"
+ *           type: integer
+ *         description: شناسه تستی که سوال به آن اضافه می‌شود
+ *         example: 123
  *     requestBody:
- *       description: اطلاعات سوال جدید شامل عنوان، گزینه‌ها و اندیس پاسخ صحیح
  *       required: true
  *       content:
  *         application/json:
@@ -296,7 +344,7 @@ router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
  *             properties:
  *               title:
  *                 type: string
- *                 example: "کدام گزینه صحیح است؟"
+ *                 example: "کدام گزینه درست است؟"
  *               items:
  *                 type: array
  *                 items:
@@ -304,11 +352,10 @@ router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
  *                 example: ["گزینه اول", "گزینه دوم", "گزینه سوم", "گزینه چهارم"]
  *               correctIndex:
  *                 type: integer
- *                 description: اندیس گزینه صحیح در آرایه items (شروع از صفر)
  *                 example: 2
  *     responses:
  *       200:
- *         description: سوال با موفقیت ایجاد شد
+ *         description: سوال با موفقیت اضافه شد
  *         content:
  *           application/json:
  *             schema:
@@ -319,12 +366,32 @@ router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
  *                   example: "سوال با موفقیت ثبت شد"
  *                 question:
  *                   type: object
- *                   description: سوال ایجاد شده
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 55
+ *                     examId:
+ *                       type: integer
+ *                       example: 123
+ *                     title:
+ *                       type: string
+ *                       example: "کدام گزینه درست است؟"
  *                 options:
  *                   type: object
- *                   description: گزینه‌ها و پاسخ صحیح
+ *                   properties:
+ *                     questionId:
+ *                       type: integer
+ *                       example: 55
+ *                     items:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["گزینه اول", "گزینه دوم", "گزینه سوم", "گزینه چهارم"]
+ *                     correctIndex:
+ *                       type: integer
+ *                       example: 2
  *       400:
- *         description: اطلاعات ناقص یا نادرست ارسال شده
+ *         description: اطلاعات ناقص یا اندیس نامعتبر
  *         content:
  *           application/json:
  *             schema:
@@ -334,7 +401,7 @@ router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
  *                   type: string
  *                   example: "اطلاعات ناقص است"
  *       401:
- *         description: عدم احراز هویت یا ثبت سوال/گزینه ناموفق
+ *         description: خطا در ثبت سوال یا گزینه‌ها
  *         content:
  *           application/json:
  *             schema:
@@ -344,7 +411,7 @@ router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
  *                   type: string
  *                   example: "سوال ثبت نشد لطفا دوباره امتحان کنید"
  *       500:
- *         description: خطای سرور هنگام ثبت سوال
+ *         description: خطای داخلی سرور
  *         content:
  *           application/json:
  *             schema:
@@ -354,24 +421,23 @@ router.delete("/:id",authMiddleware,isAdmin,testController.deleteTest )
  *                   type: string
  *                   example: "خطا در سرور برای ساخت سوال"
  */
-
-router.post("/:id/question",authMiddleware,isAdmin,testController.createTestQuestion)
+router.post("/:id/questions", authMiddleware, isAdmin, testController.createTestQuestion);
 /**
  * @swagger
- * /test/show-question/{id}:
+ * /api/v1/tests/{id}/questions:
  *   get:
- *     summary: نمایش سوالات و گزینه‌های یک آزمون (نیاز به احراز هویت)
- *     tags: [Test]
+ *     summary: دریافت تمام سوالات یک آزمون همراه با گزینه‌ها (فقط برای کاربران لاگین‌شده)
+ *     tags:
+ *       - Tests
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: شناسه آزمون برای دریافت سوالات
  *         schema:
  *           type: string
- *           example: "123abc"
+ *         description: شناسه آزمون
  *     responses:
  *       200:
  *         description: لیست سوالات به همراه گزینه‌ها
@@ -386,40 +452,29 @@ router.post("/:id/question",authMiddleware,isAdmin,testController.createTestQues
  *                     type: object
  *                     properties:
  *                       id:
- *                         type: string
- *                         example: "q1"
+ *                         type: integer
  *                       title:
  *                         type: string
- *                         example: "این سوال درباره چی هست؟"
- *                       examId:
- *                         type: string
- *                         example: "123abc"
- *                       Items:
+ *                       items:
  *                         type: array
  *                         items:
  *                           type: object
  *                           properties:
  *                             id:
- *                               type: string
- *                               example: "item1"
- *                             questionId:
- *                               type: string
- *                               example: "q1"
+ *                               type: integer
  *                             items:
  *                               type: array
  *                               items:
  *                                 type: string
- *                               example: ["گزینه اول", "گزینه دوم", "گزینه سوم"]
  *                             correctIndex:
  *                               type: integer
- *                               example: 1
  *       401:
- *         description: عدم احراز هویت
+ *         description: کاربر احراز هویت نشده است
  *       500:
- *         description: خطای سرور هنگام دریافت سوالات
+ *         description: خطای داخلی سرور
  */
 
-router.get("/:id/question",authMiddleware,testController.showQuestion)
+router.get("/:id/questions",authMiddleware,testController.showQuestion)
 //router.patch("/rate/test/:id", testController.addrate)
 
 

@@ -26,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    ega: {
-      type: DataTypes.BIGINT,
-      allowNull: true
+    birthDate: { 
+      type: DataTypes.STRING, //فرمت تاریخ مثل 17.11.1383
+      allowNull: false,
     },
 
     phone: {

@@ -52,7 +52,10 @@ db.Question.belongsTo(db.test, {
 
 // ارتباط بین سوال و گزینه
 db.Question.hasMany(db.Item, { foreignKey: 'questionId', onDelete: 'CASCADE', as: 'Items'});
-db.Item.belongsTo(db.Question, { foreignKey: 'questionId' });
+db.Item.belongsTo(db.Question, {
+  foreignKey: 'questionId',
+  as: 'question' // یا همونی که نیاز داری
+});
 
 // برای مدل کتگری و تست ها اینو اضافه میکنیم 
 db.Category.belongsToMany(db.test, {
@@ -65,6 +68,17 @@ db.test.belongsToMany(db.Category, {
   foreignKey: 'testId',
 });
 
+db.User.belongsToMany(db.test, {
+  through: db.userTest,
+  foreignKey: 'userId',
+  otherKey: 'testId',
+});
+
+db.test.belongsToMany(db.User, {
+  through: db.userTest,
+  foreignKey: 'testId',
+  otherKey: 'userId',
+});
 
 module.exports = db;
 

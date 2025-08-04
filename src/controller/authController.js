@@ -5,42 +5,43 @@ const  {validatComplitProfile} = require("./../utils/validat/userProfile")
 const db = require('../model/index');
 const User = db.User
 const axios = require('axios');
+const qs = require('qs');
+
 
 module.exports.sendOtp = async (req, res) => {
-    const { phone } = req.body;
-    const code = Math.floor(10000 + Math.random() * 90000); // 5 رقمی تضمینی
+  const { phone } = req.body;
 
-    
-    req.session.otp = code;
-    req.session.phone = phone;
+  if (!phone) {
+    return res.status(400).json({ message: "شماره موبایل الزامی است" });
+  }
 
+  const code = Math.floor(10000 + Math.random() * 90000); // کد تصادفی 5 رقمی
 
-    try {
-        const response = await axios.post('https://edge.ippanel.com/v1/api/send', {
-            sending_type: "pattern",
-            from_number: "3000505",
-            code: "decxkl5z8fpjiw6", // همون patternCode توی نمونه قبلی
-            recipients: [phone],
-         params: {
-    "verification-code": code.toString()
-}
+  req.session.otp = code;
+  req.session.phone = phone;
 
-        }, 
-        {
-            headers: {
-                "Authorization": "OWY3YmJhNmUtZjZlNy00ZTgxLWJmYzgtZGJhNGI5OWVhYTIyNDA1NmJiOTI2MWNlZTFkMjQ2ZjBmN2MyYjdmYmQyOGI=",
-                "Content-Type": "application/json"
-            }
-        }
-    );
+  const message = `به نوبین خوش آمدید. کد ورود شما ${code}`;
 
-        console.log("OTP sent:", code);
-        return res.json({ message: "OTP code sent successfully" });
+  try {
+    const response = await axios.get('https://panel.isms.ir/sendWS', {
+      params: {
+        body: message,
+        username: process.env.ISMS_USERNAME,
+        password: "71f1f1c7cc8016b121bbeca372d6c7d8",
+        mobiles: phone, // نه 'mobiles[0]'
+      },
+    });
 
-    } catch (error) {
-        console.error("خطا در ارسال پیامک:", error.response?.data || error.message);
-        return res.status(500).json({ message: "خطا در ارسال کد تایید" });
-    }
+    console.log("Username:", process.env.ISMS_USERNAME);
+    console.log("Password:","\\;oiege3\\6s874g");
+    console.log("OTP sent:", code);
+    console.log("SMS API Response:", response.data);
+
+    return res.json({ message: "کد تایید با موفقیت ارسال شد" });
+  } catch (error) {
+    console.log("SMS API Error:", error.response?.data || error.message);
+    return res.status(500).json({ message: "ارسال کد تایید با خطا مواجه شد" });
+  }
 };
 
 

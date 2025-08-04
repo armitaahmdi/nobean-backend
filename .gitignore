@@ -1,0 +1,30 @@
+# پوشه‌های وابستگی‌ها
+node_modules/
+
+# فایل‌های لاگ
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# فایل‌های محیط توسعه
+.env
+.env.local
+.env.*.local
+
+# پوشه‌های تست و پوشش کد
+coverage/
+
+# فایل‌های سیستم‌عامل
+.DS_Store
+Thumbs.db
+
+# فایل‌های مربوط به IDEها
+.vscode/
+.idea/
+
+# خروجی‌های build
+dist/
+build/
+
+# فایل‌های cache
+.cache/

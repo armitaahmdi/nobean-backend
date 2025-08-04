@@ -6,7 +6,7 @@ const db = require('../model/index');
 const User = db.User
 const axios = require('axios');
 const qs = require('qs');
-
+const bcrypt = require("bcrypt");
 
 module.exports.sendOtp = async (req, res) => {
   const { phone } = req.body;
@@ -84,6 +84,7 @@ const userId = req.user.id    // بعد از این که کار بر داخل س
 console.log(userId);
 
 const {firstName , lastName , userName , password ,copassword, email , age ,isParent,childPhone,isFather} = req.body  
+const hashedPassword = await bcrypt.hash(password, 10);
 try{ 
 if(isParent){
 
@@ -94,7 +95,7 @@ if(isParent){
     if(isFather){ 
 
         const  updated  = await User.update(
-            {fatherId:userId.id },
+            {fatherId:userId},
             {where: {phone : childPhone}}
         )
         if (updated[0] === 0) {
@@ -103,7 +104,7 @@ if(isParent){
         }else {
                 // اگر مادر بود
                 const updated = await User.update(
-                    { motherId: userId.id},
+                    { motherId: userId},
                     { where: { phone: childPhone } }
                 );
 
@@ -112,10 +113,12 @@ if(isParent){
                 }
             }
  }
+ 
+
     
 
    await User.update(
-            { firstName, lastName, userName, password, email, age },
+            { firstName, lastName, userName, password: hashedPassword, email, age },
             { where: { id: userId } }
         );
 

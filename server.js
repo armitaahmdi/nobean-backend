@@ -12,7 +12,7 @@ app.use(express.json())
 app.use(helmet());
 
 const corsOptions = {
-  origin: 'https://be77517b64ae.ngrok-free.app', // همه دامنه‌ها مجاز
+  origin: 'https://be77517b64ae.ngrok-free.app', 
   methods: ['GET', 'POST', 'PATCH', 'DELETE'  , 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

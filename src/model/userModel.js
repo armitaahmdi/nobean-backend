@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     fatherId:{
       type:DataTypes.BIGINT,
       allowNull:true,
-
+    
     },
   }, {
     timestamps: true

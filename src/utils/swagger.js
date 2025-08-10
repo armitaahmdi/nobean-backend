@@ -11,7 +11,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:8888', // آدرس سرورت
+      url: ' https://fac6db579b86.ngrok-free.app ', // آدرس سرورت
     },
   ],
 };

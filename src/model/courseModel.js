@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -17,11 +17,33 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: true,
     },
-    description: {
+    excerpt_description: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },   
+    imagePath:{
+    type: DataTypes.STRING,
+     allowNull: true
+    },
+    participants:{
+        type:DataTypes.BIGINT,
+        allowNull:false,
+       defaultValue:0
+    },
+    suitableFor: {
+  type: DataTypes.JSON,
+  allowNull: true,
+},  
+  time: {
+      type: DataTypes.BIGINT,
+      allowNull: true
     },
   });
 
   return Course;
 };
+
+
+
+
+

@@ -14,10 +14,15 @@ db.test = require('./testModel')(sequelize, DataTypes);
 db.Question = require('./questionModel')(sequelize, DataTypes);
 db.Item = require('./itemsModel')(sequelize, DataTypes);
 db.Categorytest = require('./categoryTestModel')(sequelize, DataTypes);
+db.Article = require('./articleModel')(sequelize, DataTypes);
+db.Product = require('./productModel')(sequelize, DataTypes);
+
 //db.testUser = require('./testUserModel')(sequelize, DataTypes);
 db.CourseUser = require('./courseUserModel')(sequelize, DataTypes);
 db.CategoryCourse = require('./categoryCourseModel')(sequelize, DataTypes);
 db.userTest = require('./userTestModel')(sequelize, DataTypes);
+db.Podcast = require('./podcastModel')(sequelize, DataTypes);
+
 // Many-to-Many => User <-> Course via course_user
 db.User.belongsToMany(db.Course, {
   through: db.CourseUser,
@@ -79,6 +84,15 @@ db.test.belongsToMany(db.User, {
   foreignKey: 'testId',
   otherKey: 'userId',
 });
+
+db.Category.hasMany(db.Product, {
+  foreignKey: 'categoryId',
+  onDelete: 'SET NULL'
+});
+db.Product.belongsTo(db.Category, {
+  foreignKey: 'categoryId'
+});
+
 
 module.exports = db;
 

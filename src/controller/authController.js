@@ -45,6 +45,7 @@ module.exports.sendOtp = async (req, res) => {
 };
 
 
+
 module.exports.verifyOtp=async (req ,res) => {
 const { code, phone } = req.body
  

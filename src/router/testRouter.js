@@ -63,7 +63,6 @@ const router = express.Router()
  *                   example: "مشکلی در دریافت تست‌ها به وجود آمد."
  */
 
-
 router.get("/",testController.getAll)
 /**
  * @swagger

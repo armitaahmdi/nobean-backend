@@ -16,6 +16,8 @@ db.Item = require('./itemsModel')(sequelize, DataTypes);
 db.Categorytest = require('./categoryTestModel')(sequelize, DataTypes);
 db.Article = require('./articleModel')(sequelize, DataTypes);
 db.Product = require('./productModel')(sequelize, DataTypes);
+db.order = require("./orderModel")(sequelize, DataTypes);
+db.orderItem = require("./orderItemModel")(sequelize, DataTypes);
 
 //db.testUser = require('./testUserModel')(sequelize, DataTypes);
 db.CourseUser = require('./courseUserModel')(sequelize, DataTypes);
@@ -92,6 +94,23 @@ db.Category.hasMany(db.Product, {
 db.Product.belongsTo(db.Category, {
   foreignKey: 'categoryId'
 });
+// رابط بین اردر آیتم
+db.order.hasMany(db.orderItem, { foreignKey: 'order_id' });
+db.orderItem.belongsTo(db.order, { foreignKey: 'order_id' });
+
+db.Product.hasMany(db.orderItem, { foreignKey: 'product_id' });
+db.orderItem.belongsTo(db.Product, { foreignKey: 'product_id' });
+
+
+// ارتباط کاربر با سفارش
+db.User.hasMany(db.order, { foreignKey: 'user_id' });
+db.order.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// ارتباط سفارش با آیتم‌های سفارش
+db.order.hasMany(db.orderItem, { foreignKey: 'order_id', onDelete: 'CASCADE' });
+db.orderItem.belongsTo(db.order, { foreignKey: 'order_id' });
+
+
 
 
 module.exports = db;

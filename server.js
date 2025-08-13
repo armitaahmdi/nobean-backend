@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const authRouter = require("./src/router/auth")
 const testRouter = require("./src/router/testRouter")
+const productRouter = require("./src/router/productRouter")
 const  podcastRouter  = require("./src/router/podcastRouter")
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر درست بده
 
@@ -46,6 +47,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/tests", testRouter)
 app.use("/api/v1/users", authRouter)
 app.use("/api/v1/podcasts" , podcastRouter)
+app.use("./api/v1/products" , productRouter)
 
 
 

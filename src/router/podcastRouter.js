@@ -118,6 +118,45 @@ const  router = express.Router()
  *                 message:
  *                   type: string
  *                   example: "خطا در سرور رخ داد"
+ *
+ * components:
+ *   schemas:
+ *     Podcast:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "64f8c1b9f2c29a001f5d1234"
+ *         title:
+ *           type: string
+ *           example: "سفر به اعماق ذهن"
+ *         excerpt_description:
+ *           type: string
+ *           example: "گفتگو با دکتر روانشناس درباره ذهن ناخودآگاه"
+ *         description:
+ *           type: string
+ *           example: "در این پادکست با دکتر نادری درباره موضوعات روانشناسی و ذهن صحبت می‌کنیم."
+ *         audioUrl:
+ *           type: string
+ *           format: uri
+ *           example: "https://example.com/audio/episode1.mp3"
+ *         image:
+ *           type: string
+ *           format: uri
+ *           example: "https://example.com/images/episode1.jpg"
+ *         guest:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["دکتر نادری", "مهندس رضایی"]
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["روانشناسی", "ذهن", "مصاحبه"]
+ *         duration:
+ *           type: integer
+ *           example: 42
  */
 
 router.post("/" ,authMiddleware , isAdmin , validatPodcast,podcastController.createPodcast)

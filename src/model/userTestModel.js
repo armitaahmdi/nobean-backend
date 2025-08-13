@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         type:DataTypes.BIGINT,
         primaryKey:false
 
-    }
+    },
+
 
   });
 

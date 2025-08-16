@@ -1,11 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const sequelize = require('./config/db');
 const  sessions = require("express-session")
 const cors = require('cors');
 const helmet = require("helmet")
-require('dotenv').config();
+require("./src/utils/cronjobs/createOldCart");
 
+app.get('/' , (req , res ) => {
+  res.send( "api is running")
+})
 
 const authRouter = require("./src/router/auth")
 const testRouter = require("./src/router/testRouter")
@@ -46,8 +50,8 @@ app.use(sessions({
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/tests", testRouter)
 app.use("/api/v1/users", authRouter)
-app.use("/api/v1/podcasts" , podcastRouter)
-app.use("./api/v1/products" , productRouter)
+app.use("/api/v1/podcasts" , podcastRouter) 
+app.use("/api/v1/products" , productRouter)
 
 
 

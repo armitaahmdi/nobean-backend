@@ -18,6 +18,8 @@ db.Article = require('./articleModel')(sequelize, DataTypes);
 db.Product = require('./productModel')(sequelize, DataTypes);
 db.order = require("./orderModel")(sequelize, DataTypes);
 db.orderItem = require("./orderItemModel")(sequelize, DataTypes);
+db.CartItem = require("./cartItemModel")(sequelize, DataTypes);
+db.Cart = require("./cartModel")(sequelize, DataTypes);
 
 //db.testUser = require('./testUserModel')(sequelize, DataTypes);
 db.CourseUser = require('./courseUserModel')(sequelize, DataTypes);
@@ -111,6 +113,17 @@ db.order.hasMany(db.orderItem, { foreignKey: 'order_id', onDelete: 'CASCADE' });
 db.orderItem.belongsTo(db.order, { foreignKey: 'order_id' });
 
 
+// هر کاربر یک سبد دارد
+db.User.hasOne(db.Cart, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Cart.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// هر سبد چند آیتم دارد
+db.Cart.hasMany(db.CartItem, { foreignKey: 'cart_id', onDelete: 'CASCADE' });
+db.CartItem.belongsTo(db.Cart, { foreignKey: 'cart_id' });
+
+// هر آیتم مربوط به یک محصول است
+db.Product.hasMany(db.CartItem, { foreignKey: 'product_id', onDelete: 'CASCADE' });
+db.CartItem.belongsTo(db.Product, { foreignKey: 'product_id' });
 
 
 module.exports = db;

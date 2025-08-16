@@ -44,8 +44,6 @@ module.exports.sendOtp = async (req, res) => {
   }
 };
 
-
-
 module.exports.verifyOtp=async (req ,res) => {
 const { code, phone } = req.body
  
@@ -78,7 +76,6 @@ const token = generateToken(userfind.id);
 return res.json({ success: true, token, message: "OTP verified successfully" });
 
 }
-
 
 module.exports.compitProfile = async (req , res) => {
 const userId = req.user.id    // بعد از این که کار بر داخل سایت ثبت نام کرد با توکنی که میسازی آی دی رو اینجا زخیره میکنی 

@@ -1,12 +1,23 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-const secretKey = 'sldkjfsjdsjdfljsdj'
+const secretKey = 'sldkjfsjdsjdfljsdj';
 
+// تولید توکن
 module.exports.generateToken = (userId) => {
-    return  jwt.sign({id:userId}, secretKey , { expiresIn: "7d" })
+  try {
+    return jwt.sign({ id: userId }, secretKey, { expiresIn: "7d" });
+  } catch (err) {
+    console.error("خطا در تولید توکن:", err);
+    throw new Error("توکن تولید نشد");
+  }
 }
 
+// بررسی و اعتبارسنجی توکن
 module.exports.verifyToken = (token) => {
-return jwt.verify(token , secretKey)
-
+  try {
+    return jwt.verify(token, secretKey);
+  } catch (err) {
+    console.error("خطا در اعتبارسنجی توکن:", err);
+    throw new Error("توکن نامعتبر یا منقضی شده");
+  }
 }

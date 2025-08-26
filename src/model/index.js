@@ -8,24 +8,24 @@ db.sequelize = sequelize;
 
 // اینجا مدل‌ها رو ایمپورت می‌کنیم
 db.User = require('./userModel')(sequelize, DataTypes);
-db.Course = require('./courseModel')(sequelize, DataTypes);
+db.Course = require('./courses/courseModel')(sequelize, DataTypes);
 db.Category = require('./categoryModel')(sequelize, DataTypes);
-db.test = require('./testModel')(sequelize, DataTypes);
-db.Question = require('./questionModel')(sequelize, DataTypes);
-db.Item = require('./itemsModel')(sequelize, DataTypes);
-db.Categorytest = require('./categoryTestModel')(sequelize, DataTypes);
-db.Article = require('./articleModel')(sequelize, DataTypes);
-db.Product = require('./productModel')(sequelize, DataTypes);
-db.order = require("./orderModel")(sequelize, DataTypes);
-db.orderItem = require("./orderItemModel")(sequelize, DataTypes);
-db.CartItem = require("./cartItemModel")(sequelize, DataTypes);
-db.Cart = require("./cartModel")(sequelize, DataTypes);
-
+db.test = require('./tests/testModel')(sequelize, DataTypes);
+db.Question = require('./tests/questionModel')(sequelize, DataTypes);
+db.Item = require('./tests/itemsQuestionModel')(sequelize, DataTypes);
+db.Categorytest = require('./tests/categoryTestModel')(sequelize, DataTypes);
+db.Article = require('./articles/articleModel')(sequelize, DataTypes);
+db.Product = require('./products/productModel')(sequelize, DataTypes);
+db.order = require("./carts/orders/orderModel")(sequelize, DataTypes);
+db.orderItem = require("./carts/orders/orderItemModel")(sequelize, DataTypes);
+db.CartItem = require("./carts/cartItemModel")(sequelize, DataTypes);
+db.Cart = require("./carts/cartModel")(sequelize, DataTypes);
+db.Comment = require("./comments/commentModel")(sequelize , DataTypes);
 //db.testUser = require('./testUserModel')(sequelize, DataTypes);
-db.CourseUser = require('./courseUserModel')(sequelize, DataTypes);
-db.CategoryCourse = require('./categoryCourseModel')(sequelize, DataTypes);
-db.userTest = require('./userTestModel')(sequelize, DataTypes);
-db.Podcast = require('./podcastModel')(sequelize, DataTypes);
+db.CourseUser = require('./courses/courseUserModel')(sequelize, DataTypes);
+db.CategoryCourse = require('./courses/categoryCourseModel')(sequelize, DataTypes);
+db.userTest = require('./tests/userTestModel')(sequelize, DataTypes);
+db.Podcast = require('./podcasts/podcastModel')(sequelize, DataTypes);
 
 // Many-to-Many => User <-> Course via course_user
 db.User.belongsToMany(db.Course, {
@@ -126,6 +126,19 @@ db.Product.hasMany(db.CartItem, { foreignKey: 'product_id', onDelete: 'CASCADE' 
 db.CartItem.belongsTo(db.Product, { foreignKey: 'product_id' });
 
 
+// روابط
+db.User.hasMany(db.Comment, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Comment.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// رابطه خودارجاعی (یک کامنت می‌تونه ریپلای داشته باشه)
+db.Comment.hasMany(db.Comment, { 
+  foreignKey: 'parent_comment_id', 
+  as: 'Replies' 
+});
+db.Comment.belongsTo(db.Comment, { 
+  foreignKey: 'parent_comment_id', 
+  as: 'Parent' 
+});
 module.exports = db;
 
 

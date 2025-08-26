@@ -1,7 +1,5 @@
-const request = require("request")
+
 const {generateToken} = require("../utils/jwt")
-const user = require("./../model/userModel")
-const  {validatComplitProfile} = require("./../utils/validat/userProfile")
 const db = require('../model/index');
 const User = db.User
 const axios = require('axios');
@@ -33,7 +31,7 @@ module.exports.sendOtp = async (req, res) => {
     });
 
     console.log("Username:", process.env.ISMS_USERNAME);
-    console.log("Password:","\\;oiege3\\6s874g");
+    console.log("Password:",response.password);
     console.log("OTP sent:", code);
     console.log("SMS API Response:", response.data);
 

@@ -5,6 +5,7 @@ const authMiddleware = require("../middelware/authMiddelware")
 const  isAdmin = require("./../middelware/isAdmin")
 const productController = require('../controller/productController'); // مسیر به controller
 const  {validateProduct} = require("./../utils/validat/productValidat")
+
 // گرفتن همه محصولات
 router.get('/', productController.getAllProducts);
 
@@ -21,3 +22,4 @@ router.put('/:id',authMiddleware,isAdmin,validateProduct, productController.upda
 router.delete('/:id',authMiddleware,isAdmin,validateProduct, productController.deleteProduct);
 
 module.exports = router;
+                    

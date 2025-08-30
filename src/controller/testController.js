@@ -7,6 +7,7 @@ const question = db.Question
 const  categoryTest = db.Categorytest
 const Items = db.Item
 const userTest = db.userTest
+const  Comment = db.Comment
 
 exports.getAll = async (req , res) => {
   try {
@@ -116,12 +117,25 @@ const categrys = await categoryTest.findAll({where:{testId:id }})
     if (!testData) {
       return res.status(404).json({ error: 'تست مورد نظر پیدا نشد.' });
     }
-
+const comments = await Comment.findAll({
+      where: {
+        section_type: "test",
+        section_id: id,
+      },
+      include: [
+        {
+          model: User, // اگه می‌خوای نام کاربر هم بیاد
+          attributes: ["id", "username"],
+        },
+      ],
+      order: [["createdAt", "DESC"]], // آخرین کامنت‌ها بیاد بالا
+    });
      const result = {
       ...testData.toJSON(),
       question_count,
       categrys,
-      participantCount
+      participantCount,
+      comments
     };
 
     res.status(200).json(result);

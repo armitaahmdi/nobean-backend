@@ -200,6 +200,7 @@ router.post("/verify-otp" , authController.verifyOtp)
  */
 router.post("/profile", authMiddleware, validatComplitProfile, authController.compitProfile);
 /**
+ * 
  * @swagger
  * /api/v1/users/profile:
  *   patch:

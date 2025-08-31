@@ -17,6 +17,7 @@ const productRouter = require("./src/router/productRouter")
 const  podcastRouter  = require("./src/router/podcastRouter")
 const cartRouter= require("./src/router/cartRouter")
 const commentRouter = require("./src/router/commentRouter")
+const categoryRouter = require("./src/router/categoryRouter")
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر درست بده
 
 
@@ -56,7 +57,7 @@ app.use("/api/v1/podcasts" , podcastRouter)
 app.use("/api/v1/products" , productRouter)
 app.use("/api/v1/carts", cartRouter)
 app.use("/api/v1/comments" , commentRouter)
-
+app.use("/api/v1/categories", categoryRouter)
 
 sequelize.authenticate()
    .then(() => {

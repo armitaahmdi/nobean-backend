@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const CategoryProduct = sequelize.define('category_test', {
+  const CategoryProduct = sequelize.define('categoryProduct', {
     categoryId: {
       type: DataTypes.BIGINT,
       allowNull: false

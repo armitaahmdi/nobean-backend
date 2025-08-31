@@ -26,7 +26,7 @@ db.CourseUser = require('./courses/courseUserModel')(sequelize, DataTypes);
 db.CategoryCourse = require('./courses/categoryCourseModel')(sequelize, DataTypes);
 db.userTest = require('./tests/userTestModel')(sequelize, DataTypes);
 db.Podcast = require('./podcasts/podcastModel')(sequelize, DataTypes);
-
+db.CategoryProduct=require("./products/categoryProduct")(sequelize, DataTypes);
 // Many-to-Many => User <-> Course via course_user
 db.User.belongsToMany(db.Course, {
   through: db.CourseUser,
@@ -89,13 +89,20 @@ db.test.belongsToMany(db.User, {
   otherKey: 'userId',
 });
 
-db.Category.hasMany(db.Product, {
+db.Product.belongsToMany(db.Category, {
+  through: db.CategoryProduct, // اسم جدول واسطه
+  foreignKey: 'productId',
+  otherKey: 'categoryId',
+  as: 'categories'
+});
+
+db.Category.belongsToMany(db.Product, {
+  through: db.CategoryProduct,
   foreignKey: 'categoryId',
-  onDelete: 'SET NULL'
+  otherKey: 'productId',
+  as: 'products'
 });
-db.Product.belongsTo(db.Category, {
-  foreignKey: 'categoryId'
-});
+
 // رابط بین اردر آیتم
 db.order.hasMany(db.orderItem, { foreignKey: 'order_id' });
 db.orderItem.belongsTo(db.order, { foreignKey: 'order_id' });

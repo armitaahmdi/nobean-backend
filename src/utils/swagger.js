@@ -11,9 +11,18 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: ' http://171.22.25.201:3002', // آدرس سرورت
+      url: '   https://f79c47182545.ngrok-free.app ', // آدرس سرورت
     },
   ],
+    components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  },
 };
 
 // تنظیمات برای گرفتن کامنت‌ها از فایل‌ها

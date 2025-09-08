@@ -29,7 +29,7 @@ app.use(cors());
 const corsOptions = {
   origin: function(origin, callback){
     if(!origin) return callback(null, true); // مثلا Postman یا curl
-    if(origin === 'https://36b57023baaf.ngrok-free.app  ' || origin === 'http://localhost:8888'){
+    if(origin === 'https://36b57023baaf.ngrok-free.app' || origin === 'http://localhost:8888'){
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

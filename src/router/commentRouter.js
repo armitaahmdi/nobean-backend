@@ -110,9 +110,8 @@ const CommentController = require('../controller/commentController'); // مسی�
  *                   type: string
  *                   example: "خطای داخلی سرور"
  */
-
 // گرفتن همه کامنت‌ها برای یک سکشن (course, exam, article, ...)
-router.get('/', CommentController.getCommentsBySection);
+router.get("/", CommentController.getCommentsBySection);
 /**
  * @swagger
  * /api/v1/comments/{id}/replies:
@@ -206,7 +205,7 @@ router.get('/', CommentController.getCommentsBySection);
 
 // گرفتن ریپلای‌های یک کامنت
 // مثال: GET /api/v1/comments/10/replies?section_type=course&section_id=1
-router.get('/:id/replies', CommentController.getRepliesByComment);
+router.get("/:id/replies", CommentController.getRepliesByComment);
 /**
  * @swagger
  * /api/v1/comments:
@@ -307,7 +306,7 @@ router.get('/:id/replies', CommentController.getRepliesByComment);
  */
 
 // ایجاد کامنت جدید (کاربر لاگین شده)
-router.post('/', authMiddleware, CommentController.createComment);
+router.post("/", authMiddleware, CommentController.createComment);
 /**
  * @swagger
  * /api/v1/comments/{id}:
@@ -428,7 +427,7 @@ router.post('/', authMiddleware, CommentController.createComment);
  */
 
 // ویرایش کامنت (کاربر خودش)
-router.put('/:id', authMiddleware, CommentController.updateComment);
+router.put("/:id", authMiddleware, CommentController.updateComment);
 /**
  * @swagger
  * /api/v1/comments/{id}:
@@ -511,8 +510,8 @@ router.put('/:id', authMiddleware, CommentController.updateComment);
  *                   type: string
  */
 
-// حذف کامنت (کاربر خودش یا ادمین)
-router.delete('/:id', authMiddleware, isAdmin,CommentController.deleteComment);
+// حذف کامنت (  ادمین)
+router.delete("/:id", authMiddleware, isAdmin,CommentController.deleteComment);
 
 module.exports = router;
 

@@ -5,7 +5,8 @@ const secretKey = 'sldkjfsjdsjdfljsdj';
 // تولید توکن
 module.exports.generateToken = (userId) => {
   try {
-    return jwt.sign({ id: userId }, secretKey, { expiresIn: "7d" });
+    //, { expiresIn: "7d" }
+    return jwt.sign({ id: userId }, secretKey);
   } catch (err) {
     console.error("خطا در تولید توکن:", err);
     throw new Error("توکن تولید نشد");

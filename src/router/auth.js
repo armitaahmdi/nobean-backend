@@ -1,8 +1,8 @@
 const express = require("express")
 const authController = require("../controller/authController")
-const authMiddleware = require("../middelware/authMiddelware")
+const authMiddleware = require("./../middelware/authMiddelware")
 const  isAdmin = require("./../middelware/isAdmin")
-const  {validatComplitProfile} = require("./../utils/validat/userProfile")
+const  {validatComplitProfile , validateEditProfile} = require("../utils/validate/userProfile")
 const router = express.Router()
 /**
  * @swagger
@@ -99,6 +99,16 @@ router.post("/send-otp" , authController.sendOtp)
  *                 message:
  *                   type: string
  *                   example: "کد یا شماره اشتباه است."
+ *         500:
+ *         description: خطا در سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "خطا در سرور"
  */
 
 router.post("/verify-otp" , authController.verifyOtp)
@@ -198,7 +208,7 @@ router.post("/verify-otp" , authController.verifyOtp)
  *                   type: string
  *                   example: "خطا در سرور"
  */
-router.post("/profile", authMiddleware, validatComplitProfile, authController.compitProfile);
+router.post("/profile", authMiddleware, validatComplitProfile, authController.completeProfile);
 /**
  * 
  * @swagger
@@ -278,7 +288,7 @@ router.post("/profile", authMiddleware, validatComplitProfile, authController.co
  *                   type: string
  *                   example: "Server error"
  */
-router.patch("/profile", authMiddleware, authController.editProfile);
+router.patch("/profile", authMiddleware,validateEditProfile, authController.editProfile);
 
 
 module.exports = router

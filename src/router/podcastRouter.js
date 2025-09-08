@@ -2,7 +2,7 @@ const  express = require("express")
 const authMiddleware = require("../middelware/authMiddelware")
 const  isAdmin = require("./../middelware/isAdmin")
 const  podcastController = require("./../controller/podcastController")
-const  {validatPodcast} = require("./../utils/validat/podcast")
+const  {validatPodcast} = require("../utils/validate/podcast")
 const  router = express.Router()
 /**
  * @swagger
@@ -368,7 +368,7 @@ router.delete("/:id" ,authMiddleware , isAdmin  , podcastController.delete)
  *         description: خطای سرور
  */
 
-router.patch("/:id" ,authMiddleware , isAdmin  , podcastController.edite)
+router.patch("/:id" ,authMiddleware , isAdmin  , podcastController.edit)
 
 
 

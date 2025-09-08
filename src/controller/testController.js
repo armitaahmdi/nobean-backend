@@ -45,6 +45,7 @@ exports.getAll = async (req , res) => {
     time:t.time,
     question_count,
     participantCount
+    //rating
    })
    }
 

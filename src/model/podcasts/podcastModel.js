@@ -1,4 +1,3 @@
-const { defaultValueSchemable } = require("sequelize/lib/utils");
 
 module.exports = (sequelize, DataTypes) => {
   const podcast = sequelize.define('podcast', {

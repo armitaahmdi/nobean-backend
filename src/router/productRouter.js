@@ -4,14 +4,14 @@ const router = express.Router();
 const authMiddleware = require("../middelware/authMiddelware")
 const  isAdmin = require("./../middelware/isAdmin")
 const productController = require('../controller/productController'); // مسیر به controller
-const  {validateProduct} = require("./../utils/validat/productValidat")
+const  {validateProduct} = require("./../utils/validate/productValidat")
 /**
  * @swagger
  * /api/v1/products:
  *   get:
  *     summary: دریافت همه محصولات
  *     tags:
- *       - Product
+ *       - Products
  *     parameters:
  *       - in: query
  *         name: page
@@ -104,14 +104,14 @@ const  {validateProduct} = require("./../utils/validat/productValidat")
  */
 
 // گرفتن همه محصولات
-router.get('/', productController.getAllProducts);
+router.get("/", productController.getAllProducts);
 /**
  * @swagger
  * /api/v1/products/{id}:
  *   get:
  *     summary: دریافت جزئیات یک محصول
  *     tags:
- *       - Product
+ *       - Products
  *     parameters:
  *       - in: path
  *         name: id
@@ -200,14 +200,14 @@ router.get('/', productController.getAllProducts);
  */
 
 // گرفتن جزئیات یک محصول
-router.get('/:id', productController.getProductById);
+router.get("/:id", productController.getProductById);
 /**
  * @swagger
  * /api/v1/products:
  *   post:
  *     summary: ایجاد محصول جدید (فقط توسط ادمین)
  *     tags:
- *       - Product
+ *       - Products
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -321,7 +321,7 @@ router.get('/:id', productController.getProductById);
  */
 
 // ایجاد محصول جدید (ادمین)
-router.post('/', authMiddleware,isAdmin,validateProduct,productController.createProduct);
+router.post("/", authMiddleware,isAdmin,validateProduct,productController.createProduct);
 /**
  * @swagger
  * /api/v1/products/{id}:
@@ -382,7 +382,7 @@ router.post('/', authMiddleware,isAdmin,validateProduct,productController.create
  */
 
 // ویرایش محصول موجود (ادمین)
-router.put('/:id',authMiddleware,isAdmin,validateProduct, productController.updateProduct);
+router.put("/:id",authMiddleware,isAdmin,validateProduct, productController.updateProduct);
 /**
  * @swagger
  * /api/v1/products/{id}:
@@ -497,7 +497,7 @@ router.patch("/:id",authMiddleware, isAdmin , productController.patchProduct )
  */
 
 // حذف محصول (ادمین)
-router.delete('/:id',authMiddleware,isAdmin, productController.deleteProduct);
+router.delete("/:id",authMiddleware,isAdmin, productController.deleteProduct);
 
 
 module.exports = router;

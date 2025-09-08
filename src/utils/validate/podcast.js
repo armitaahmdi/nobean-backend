@@ -7,7 +7,7 @@ body('title')
  .trim()
  .notEmpty().withMessage("وجود نام پادکست الزامی است ")
  .isLength({max:20 }).withMessage("نام باید کمتر از 20 کارکتر داشته باشد ")
- .matches (/^[a-zA-Zآ-ی\s]+$/).withMessage("نام فقط باید شامل حروف باشد "),
+.withMessage("نام فقط باید شامل حروف باشد "),
 
  body("excerpt_description")
   .trim()
@@ -34,14 +34,16 @@ body("image")
 
 body("guest")
     .optional()
-    .trim()
- .custom((arr) => arr.every(item => typeof item === 'string')).withMessage('همه مهمان‌ها باید رشته باشند')
-  
+    .custom((arr) => {
+      if (!Array.isArray(arr)) return false;
+      return arr.every(item => typeof item === 'string');
+    }).withMessage('همه مهمان‌ها باید رشته باشند')
+
   ,
 
  body("tags")
     .optional()
-    .trim()
+
     .custom((value) => {
     if (!Array.isArray(value)) {
       throw new Error("فیلد tags باید آرایه باشد");

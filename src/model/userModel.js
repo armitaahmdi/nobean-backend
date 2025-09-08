@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.ENUM('admin', 'teacher', 'student','parent', ),
       allowNull: true,
-      default: 'student'
+  defaultValue: 'student'
     },
     email: {
       type: DataTypes.STRING,
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     birthDate: { 
       type: DataTypes.STRING, //فرمت تاریخ مثل 17.11.1383
-      allowNull: false,
+      allowNull: true,
     },
 
     phone: {

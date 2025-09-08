@@ -1,4 +1,4 @@
-const express = require("express")
+
 const db = require("./../model/index")
 const { Op } = require("sequelize")
 
@@ -46,7 +46,7 @@ try{
   attributes:["title" , "image" , "audioUrl" ,"guest" ,"tags","publishDate"]
 });
 
-if(!allPodcast){
+if (allPodcast.length === 0){
     return res.status(404).json({message:"پیدا نشد پادکستی "})
 }
 
@@ -81,7 +81,8 @@ exports.delete = async (req , res ) => {
 try{
  const {id} = req.params 
 
- if (isNaN(id)) {
+if (!id || !Number.isInteger(+id)) 
+{
   return res.status(400).json({ message: "آی‌دی معتبر نیست" });
 }
 
@@ -102,10 +103,11 @@ try{
 
 }
 
-exports.edite = async (req , res ) => {
+exports.edit = async (req , res ) => {
 try{
     const {id}=req.params
-    if(isNaN(id)){
+ if (!id || !Number.isInteger(+id)) 
+{
         return res.status(400).json({message: "آیدی وارد نشده "})
     }
 
@@ -114,6 +116,8 @@ try{
  if(!podcastFinded){
     return res.status(404).json({message: "پادکستی با این مشخصات وجود ندارد"})
  }
+if (guest && !Array.isArray(guest)) guest = JSON.parse(guest);
+if (tags && !Array.isArray(tags)) tags = JSON.parse(tags);
 
  await podcastFinded.update(req.body)
 

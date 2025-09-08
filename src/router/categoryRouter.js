@@ -41,7 +41,7 @@ const authMiddleware = require("../middelware/authMiddelware");
  *                   example: "مشکلی در دریافت دسته‌ها پیش آمد."
  */
 // مسیرها
-router.get('/',categoryController.getAllCategories);
+router.get("/",categoryController.getAllCategories);
 
 /**
  * @swagger
@@ -85,7 +85,6 @@ router.get('/',categoryController.getAllCategories);
  *                   type: string
  *                   example: "مشکلی در دریافت دسته‌بندی پیش آمد."
  */
-
 
 router.get('/:id', categoryController.getCategoryById);
 /**
@@ -148,7 +147,7 @@ router.get('/:id', categoryController.getCategoryById);
  *                   type: string
  *                   example: "مشکلی در ایجاد دسته‌بندی پیش آمد."
  */
-router.post('/', authMiddleware, isAdmin, categoryController.createCategory);
+router.post("/", authMiddleware, isAdmin, categoryController.createCategory);
 
 
 /**
@@ -216,7 +215,7 @@ router.post('/', authMiddleware, isAdmin, categoryController.createCategory);
  *                   type: string
  *                   example: "مشکلی در ویرایش دسته‌بندی پیش آمد."
  */
-router.put('/:id', authMiddleware, isAdmin, categoryController.updateCategory);
+router.put("/:id", authMiddleware, isAdmin, categoryController.updateCategory);
 
 /**
  * @swagger
@@ -266,7 +265,7 @@ router.put('/:id', authMiddleware, isAdmin, categoryController.updateCategory);
  *                   type: string
  *                   example: "مشکلی در حذف دسته‌بندی پیش آمد."
  */
-router.delete('/:id', authMiddleware, isAdmin, categoryController.deleteCategory);
+router.delete("/:id", authMiddleware, isAdmin, categoryController.deleteCategory);
 
 
 

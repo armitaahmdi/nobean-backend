@@ -1,32 +1,37 @@
 const db = require('../model/index');
 const { Product, Category } = db;
 
-// گرفتن همه محصولات
+
+// گرفتن همه محصولات با pagination
 exports.getAllProducts = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
 
-    const products = await Product.findAll({
-      include: [{ model: Category, as: 'category' }],
+    const { count, rows } = await Product.findAndCountAll({
+      include: [{ model: Category, as: 'categories' }],
       order: [['createdAt', 'DESC']],
       limit: +limit,
       offset: +offset
     });
 
-    if (products.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ message: "هیچ محصولی یافت نشد." });
     }
 
     res.status(200).json({
-      count: products.length,
-      products
+      total: count,          // تعداد کل محصولات
+      currentPage: +page,    // شماره صفحه فعلی
+      totalPages: Math.ceil(count / limit), // تعداد کل صفحات
+      count: rows.length,    // تعداد محصولات در همین صفحه
+      products: rows
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 
 
 // گرفتن یک محصول با جزئیات
@@ -40,7 +45,7 @@ exports.getProductById = async (req, res) => {
     }
 
     const product = await Product.findByPk(id, {
-      include: [{ model: Category, as: 'category' }]
+      include: [{ model: Category, as: 'categories' }]
     });
 
     if (!product) {
@@ -116,37 +121,40 @@ exports.updateProduct = async (req, res) => {
     const product = await Product.findByPk(id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
-    // بررسی معتبر بودن categoryId
+    // آماده‌سازی داده‌های آپدیت (به جز categoryId)
+    const updatedData = {};
+    if (name) updatedData.name = name;
+if (price !== undefined) updatedData.price = price;
+
+    if (count) updatedData.count = count;
+    if (description) updatedData.description = description;
+    if (imageUrl) updatedData.imageUrl = imageUrl;
+    if (discount) updatedData.discount = discount;
+
+    // آپدیت اطلاعات محصول
+    await product.update(updatedData);
+
+    // اگر categoryId ارسال شد → دسته‌بندی رو ست کن
     if (categoryId) {
       const category = await Category.findByPk(categoryId);
       if (!category) {
         return res.status(400).json({ message: 'Invalid categoryId' });
       }
+      await product.setCategories([categoryId]); // جدول واسطه رو آپدیت می‌کنه
     }
-
-    // آماده‌سازی داده‌های آپدیت
-    const updatedData = {};
-    if (name) updatedData.name = name;
-    if (price) updatedData.price = price;
-    if (count) updatedData.count = count;
-    if (description) updatedData.description = description;
-    if (imageUrl) updatedData.imageUrl = imageUrl;
-    if (discount) updatedData.discount = discount;
-    if (categoryId) updatedData.categoryId = categoryId;
-
-    await product.update(updatedData);
 
     // گرفتن محصول همراه با دسته‌بندی
     const updatedProduct = await Product.findByPk(product.id, {
-      include: [{ model: Category, as: 'category' }]
+      include: [{ model: Category, as: 'categories' }]
     });
 
-    res.status(200).json(updatedProduct);
+    res.status(200).json({message:"آپدیت با موفقیت انجام شد ",product:updatedProduct});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 
 
 // حذف محصول (ادمین)
@@ -195,14 +203,6 @@ exports.patchProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    // اگه categoryId اومده، اعتبارسنجی کن
-    if (categoryId) {
-      const category = await Category.findByPk(categoryId);
-      if (!category) {
-        return res.status(400).json({ message: 'Invalid categoryId' });
-      }
-    }
-
     // آماده‌سازی داده‌های آپدیت (فقط فیلدهای موجود)
     const updatedData = {};
     if (name !== undefined) updatedData.name = name;
@@ -211,21 +211,30 @@ exports.patchProduct = async (req, res) => {
     if (description !== undefined) updatedData.description = description;
     if (imageUrl !== undefined) updatedData.imageUrl = imageUrl;
     if (discount !== undefined) updatedData.discount = discount;
-    if (categoryId !== undefined) updatedData.categoryId = categoryId;
 
     // اگر هیچ فیلدی نیومده بود
-    if (Object.keys(updatedData).length === 0) {
+    if (Object.keys(updatedData).length === 0 && !categoryId) {
       return res.status(400).json({ message: 'No fields provided for update' });
     }
 
+    // آپدیت محصول
     await product.update(updatedData);
 
-    // گرفتن محصول نهایی همراه دسته‌بندی
+    // اگر categoryId اومد، دسته‌بندی‌ها رو ست کن
+    if (categoryId) {
+      const category = await Category.findByPk(categoryId);
+      if (!category) {
+        return res.status(400).json({ message: 'Invalid categoryId' });
+      }
+      await product.setCategories([categoryId]);
+    }
+
+    // گرفتن محصول نهایی همراه دسته‌بندی‌ها
     const patchedProduct = await Product.findByPk(product.id, {
-      include: [{ model: Category, as: 'category' }]
+      include: [{ model: Category, as: 'categories' }]
     });
 
-    res.status(200).json(patchedProduct);
+    res.status(200).json({message:"آپدیت با موفقیت انجام شد ",product:patchedProduct});
 
   } catch (err) {
     console.error(err);

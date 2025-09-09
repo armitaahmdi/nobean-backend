@@ -40,7 +40,10 @@ console.log(User);
         .isEmail().withMessage("ساختار ایمیل معتبر نیست"),
 
 
-
+     body("age")
+        .trim()
+        .notEmpty().withMessage("سن الزامی است")
+        .isInt({ min: 1, max: 120 }).withMessage("سن باید بین 1 تا 120 باشد"),
 
       (req, res, next) => {
     const errors = validationResult(req);

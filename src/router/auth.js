@@ -140,12 +140,6 @@ router.post("/login",authController.login)
  *               userName:
  *                 type: string
  *                 example: "ali_m"
- *               password:
- *                 type: string
- *                 example: "password123"
- *               copassword:
- *                 type: string
- *                 example: "password123"
  *               email:
  *                 type: string
  *                 example: "ali@example.com"
@@ -165,8 +159,6 @@ router.post("/login",authController.login)
  *               - firstName
  *               - lastName
  *               - userName
- *               - password
- *               - copassword
  *               - email
  *               - age
  *     responses:

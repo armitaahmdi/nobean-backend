@@ -40,17 +40,6 @@ console.log(User);
         .isEmail().withMessage("ساختار ایمیل معتبر نیست"),
 
 
-     body("password")
-        .notEmpty().withMessage("رمز عبور الزامی است")
-        .isLength({ min: 6 }).withMessage("رمز عبور باید حداقل ۶ کاراکتر باشد"),
-
-     body("copassword")
-        .custom((value, { req }) => {
-          if (value !== req.body.password) {
-            throw new Error("رمز عبور و تکرار آن یکسان نیستند");
-          }
-          return true;
-    }),
 
 
       (req, res, next) => {

@@ -75,11 +75,9 @@ module.exports.completeProfile = async (req , res) => {
 const userId = req.user.id    // بعد از این که کار بر داخل سایت ثبت نام کرد با توکنی که میسازی آی دی رو اینجا زخیره میکنی 
 console.log(userId);
 
-const {firstName , lastName , userName , password ,copassword, email , age ,isParent,childPhone,isFather} = req.body  
+const {firstName , lastName , userName , email , age ,isParent,childPhone,isFather} = req.body  
 const hashedPassword = await bcrypt.hash(password, 10);
 try{ 
-//ایا پسورد برابر نیست با کوپسورد 
-if(copassword !== password) return res.status(402).json({message:"copassword not equal"})
 if(isParent){
 
          const UserChild = await User.findOne({ where: { phone: childPhone } });
@@ -153,6 +151,31 @@ try {
   } catch (error) {
     console.error("Edit Profile Error:", error);
     return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+module.exports.getProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // از authMiddleware میاد
+
+    const user = await User.findByPk(userId, {
+      attributes: {
+        exclude: ["password"] // پسورد رو نفرسته
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "کاربر یافت نشد" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error("Get Profile Error:", error);
+    return res.status(500).json({ message: "خطا در سرور" });
   }
 };
 

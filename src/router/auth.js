@@ -293,5 +293,46 @@ router.post("/profile", authMiddleware, validatComplitProfile, authController.co
  */
 router.patch("/profile", authMiddleware,validateEditProfile, authController.editProfile);
 
+/**
+ * @swagger
+ * /api/v1/users/profile:
+ *   get:
+ *     summary: دریافت اطلاعات پروفایل کاربر (فقط کاربران وارد شده)
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: اطلاعات پروفایل کاربر
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 firstName:
+ *                   type: string
+ *                   example: "علی"
+ *                 lastName:
+ *                   type: string
+ *                   example: "محمدی"
+ *                 userName:
+ *                   type: string
+ *                   example: "ali_m"
+ *                 email:
+ *                   type: string
+ *                   example: "ali@example.com"
+ *                 age:
+ *                   type: integer
+ *                   example: 30
+ *       404:
+ *         description: کاربر یافت نشد
+ *       500:
+ *         description: خطای سرور
+ */
+router.get("/profile", authMiddleware, authController.getProfile);
 
 module.exports = router

@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     section_type: {
-      type: DataTypes.STRING(50), // course, exam, lesson, ...
+      type: DataTypes.ENUM('course', 'test', 'product', 'podcast'), // course, exam, lesson, ...
       allowNull: false,
     },
     section_id: {

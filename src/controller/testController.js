@@ -8,6 +8,8 @@ const  categoryTest = db.Categorytest
 const Items = db.Item
 const userTest = db.userTest
 const  Comment = db.Comment
+const User = db.User;
+
 
 exports.getAll = async (req , res) => {
   try {

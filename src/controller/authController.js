@@ -67,6 +67,10 @@ module.exports.verifyOtp = async (req, res) => {
 };
 
 
+module.exports.login = async (req , res) => {
+  
+}
+
 module.exports.completeProfile = async (req , res) => {
 const userId = req.user.id    // بعد از این که کار بر داخل سایت ثبت نام کرد با توکنی که میسازی آی دی رو اینجا زخیره میکنی 
 console.log(userId);

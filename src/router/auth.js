@@ -99,7 +99,7 @@ router.post("/send-otp" , authController.sendOtp)
  *                 message:
  *                   type: string
  *                   example: "کد یا شماره اشتباه است."
- *         500:
+ *       500:
  *         description: خطا در سرور
  *         content:
  *           application/json:
@@ -109,9 +109,12 @@ router.post("/send-otp" , authController.sendOtp)
  *                 message:
  *                   type: string
  *                   example: "خطا در سرور"
+
  */
 
 router.post("/verify-otp" , authController.verifyOtp)
+
+router.post("/login",authController.login)
 /**
  * @swagger
  * /api/v1/users/profile:

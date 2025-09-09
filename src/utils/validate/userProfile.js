@@ -85,7 +85,7 @@ exports.validateEditProfile = [
     .trim()
     .isLength({ min: 4, max: 16 }).withMessage("نام کاربری باید بین ۴ تا ۱۶ کاراکتر باشد")
     .custom(async (value, { req }) => {
-      const existingUser = await User.findOne({ where: { userName: value } });
+      const existingUser = await user.findOne({ where: { userName: value } });
       if (existingUser && existingUser.id !== req.user.id) {
         throw new Error("این نام کاربری قبلاً استفاده شده است");
       }
@@ -97,7 +97,7 @@ exports.validateEditProfile = [
     .trim()
     .isEmail().withMessage("ساختار ایمیل معتبر نیست")
     .custom(async (value, { req }) => {
-      const existingEmail = await User.findOne({ where: { email: value } });
+      const existingEmail = await user.findOne({ where: { email: value } });
       if (existingEmail && existingEmail.id !== req.user.id) {
         throw new Error("این ایمیل قبلاً استفاده شده است");
       }

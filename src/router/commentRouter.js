@@ -5,7 +5,7 @@ const authMiddleware = require("../middelware/authMiddelware");
 const CommentController = require('../controller/commentController'); // مسیر به controller
 /**
  * @swagger
- * /api/v1/comments:
+ * /api/v1/comments/:
  *   get:
  *     summary: دریافت کامنت‌ها و ریپلای‌ها برای یک سکشن مشخص
  *     tags:
@@ -15,15 +15,14 @@ const CommentController = require('../controller/commentController'); // مسی�
  *         name: section_type
  *         schema:
  *           type: string
+ *           enum: [course, test, lesson, product, podcast]
  *         required: true
- *         description: نوع سکشن (مثال: course, exam, lesson)
- *         example: "course"
+ *         example: course
  *       - in: query
  *         name: section_id
  *         schema:
  *           type: integer
  *         required: true
- *         description: شناسه سکشن
  *         example: 1
  *     responses:
  *       200:
@@ -55,7 +54,6 @@ const CommentController = require('../controller/commentController'); // مسی�
  *                     format: date-time
  *                   Replies:
  *                     type: array
- *                     description: ریپلای‌های هر کامنت
  *                     items:
  *                       type: object
  *                       properties:
@@ -110,8 +108,9 @@ const CommentController = require('../controller/commentController'); // مسی�
  *                   type: string
  *                   example: "خطای داخلی سرور"
  */
-// گرفتن همه کامنت‌ها برای یک سکشن (course, exam, article, ...)
+
 router.get("/", CommentController.getCommentsBySection);
+
 /**
  * @swagger
  * /api/v1/comments/{id}/replies:
@@ -126,14 +125,15 @@ router.get("/", CommentController.getCommentsBySection);
  *         schema:
  *           type: integer
  *         description: شناسه کامنت والد
- *         example: 1
+ *         example: 10
  *       - in: query
  *         name: section_type
  *         required: true
  *         schema:
  *           type: string
- *         description: نوع سکشن (مثال: course, exam, lesson)
- *         example: "course"
+ *           enum: [course,test, lesson, product, podcast]
+ *         description: نوع سکشن
+ *         example: course
  *       - in: query
  *         name: section_id
  *         required: true
@@ -180,7 +180,7 @@ router.get("/", CommentController.getCommentsBySection);
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "id نامعتبر است"
+ *                   example: "id یا پارامترهای section_type و section_id نامعتبر هستند"
  *       404:
  *         description: هیچ ریپلای‌ای برای کامنت وجود ندارد
  *         content:
@@ -214,7 +214,7 @@ router.get("/:id/replies", CommentController.getRepliesByComment);
  *     tags:
  *       - Comments
  *     security:
- *       - bearerAuth: []   # چون authMiddleware داره
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -232,7 +232,8 @@ router.get("/:id/replies", CommentController.getRepliesByComment);
  *                 example: "این یک کامنت تستی است"
  *               section_type:
  *                 type: string
- *                 description: نوع سکشن (course, exam, lesson ...)
+ *                 description: نوع سکشن
+ *                 enum: [course, test, product, podcast]
  *                 example: "course"
  *               section_id:
  *                 type: integer
@@ -241,6 +242,7 @@ router.get("/:id/replies", CommentController.getRepliesByComment);
  *               parent_comment_id:
  *                 type: integer
  *                 description: اگر ریپلای است، شناسه کامنت والد
+ *                 nullable: true
  *                 example: 5
  *     responses:
  *       201:

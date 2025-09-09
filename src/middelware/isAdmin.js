@@ -14,7 +14,9 @@ const User = db.User
                 return res.status(404).json({message:"user not faund" })
             }
             if(checkUserAdmin.role !== "admin" ){
-                return res.status(401).json({message:"شما اجازه ورود ندارید "})
+                console.log(checkUserAdmin.role );
+                
+                return res.status(401).json({message:"شما اجازه  ندارید "})
             }
 
             next()

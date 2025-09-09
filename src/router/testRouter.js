@@ -146,7 +146,7 @@ router.get("/",testController.getAll)
  *                     title:
  *                       type: string
  *                       example: "آزمون ریاضی پایه دهم"
- *                     // بقیه فیلدهای تست جدید که برگشت داده میشه
+ *           
  *       400:
  *         description: خطا در ورودی (فیلدهای ضروری پر نشده)
  *         content:

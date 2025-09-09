@@ -11,7 +11,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: '   https://f79c47182545.ngrok-free.app ', // آدرس سرورت
+      url: 'https://api.nobean.ir ', // آدرس سرورت
     },
   ],
     components: {

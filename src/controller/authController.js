@@ -75,8 +75,7 @@ module.exports.completeProfile = async (req , res) => {
 const userId = req.user.id    // بعد از این که کار بر داخل سایت ثبت نام کرد با توکنی که میسازی آی دی رو اینجا زخیره میکنی 
 console.log(userId);
 
-const {firstName , lastName , userName , email , age ,isParent,childPhone,isFather} = req.body  
-const hashedPassword = await bcrypt.hash(password, 10);
+const {firstName , lastName , userName , email , age ,isParent,childPhone,isFather} = req.body
 try{ 
 if(isParent){
 
@@ -110,7 +109,7 @@ if(isParent){
     
 
    await User.update(
-            { firstName, lastName, userName, password: hashedPassword, email, age },
+            { firstName, lastName, userName, email, age },
             { where: { id: userId } }
         );
 

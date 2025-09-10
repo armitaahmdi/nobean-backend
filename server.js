@@ -23,23 +23,31 @@ const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر �
 
 app.use(express.json())
 app.use(helmet());
-app.use(cors());
-
 
 const corsOptions = {
   origin: function(origin, callback){
     if(!origin) return callback(null, true); // مثلا Postman یا curl
-    if(origin === 'https://36b57023baaf.ngrok-free.app' || origin === 'http://localhost:8888'){
+     const allowedOrigins = [
+      'https://36b57023baaf.ngrok-free.app',
+      'http://localhost:8888',
+      'http://localhost:5173',
+      'https://nobean.ir',
+      'https://www.nobean.ir',
+      'https://api.nobean.ir'
+    ];
+    
+    if(allowedOrigins.includes(origin)){
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requestd-With'],
   credentials: true
 }
 
+app.use(cors(corsOptions));
 
 app.use(sessions({
   secret:"sldkflsdfskdjflksjdfk",

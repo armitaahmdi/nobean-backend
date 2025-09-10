@@ -233,7 +233,7 @@ router.post("/profile", authMiddleware, validatComplitProfile, authController.co
  *               email:
  *                 type: string
  *                 example: "ali@example.com"
- *               ega:
+ *               age:
  *                 type: integer
  *                 example: 30
  *     responses:
@@ -260,7 +260,7 @@ router.post("/profile", authMiddleware, validatComplitProfile, authController.co
  *                       type: string
  *                     email:
  *                       type: string
- *                     ega:
+ *                     age:
  *                       type: integer
  *       404:
  *         description: کاربر یافت نشد

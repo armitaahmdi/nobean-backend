@@ -42,7 +42,7 @@ exports.getAll = async (req, res) => {
       testresult.push({
         id: t.id,
         title: t.title,
-        imagepath: t.imagepath,
+        imagepath: t.imagePath,
         shortDescription: t.ShortDescription,
         price: t.price,
         target_audience: t.target_audience,
@@ -81,7 +81,7 @@ exports.createTest = async (req, res) => {
       target_audience,
       price,
       category,
-      imagepath,
+      imagePath: imagepath,
       suitableFor,
       tags,
       descriptionVideo

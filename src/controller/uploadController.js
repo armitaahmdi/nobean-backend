@@ -298,20 +298,17 @@ exports.uploadFile = async (req, res) => {
         const filePath = req.file.path;
         console.log('File path:', filePath);
         
-        const uploadsIndex = filePath.indexOf('uploads');
-        let relativePath;
+        // Extract the relative path from uploads directory
+        const pathParts = filePath.split(path.sep);
+        const uploadsIndex = pathParts.indexOf('uploads');
         
+        let relativePath;
         if (uploadsIndex !== -1) {
-            relativePath = filePath.substring(uploadsIndex + 'uploads'.length).replace(/\\/g, '/');
+            // Get everything after 'uploads' directory
+            relativePath = '/' + pathParts.slice(uploadsIndex + 1).join('/');
         } else {
-            // Fallback: extract path after uploads directory
-            const pathParts = filePath.split(path.sep);
-            const uploadsIndex = pathParts.indexOf('uploads');
-            if (uploadsIndex !== -1) {
-                relativePath = '/' + pathParts.slice(uploadsIndex + 1).join('/');
-            } else {
-                relativePath = '/' + req.file.filename;
-            }
+            // Fallback: use filename
+            relativePath = '/' + req.file.filename;
         }
         
         const fileUrl = `/uploads${relativePath}`;
@@ -346,20 +343,14 @@ exports.uploadMultipleFiles = async (req, res) => {
 
         const uploadedFiles = req.files.map(file => {
             const filePath = file.path;
-            const uploadsIndex = filePath.indexOf('uploads');
-            let relativePath;
+            const pathParts = filePath.split(path.sep);
+            const uploadsIndex = pathParts.indexOf('uploads');
             
+            let relativePath;
             if (uploadsIndex !== -1) {
-                relativePath = filePath.substring(uploadsIndex + 'uploads'.length).replace(/\\/g, '/');
+                relativePath = '/' + pathParts.slice(uploadsIndex + 1).join('/');
             } else {
-                // Fallback: extract path after uploads directory
-                const pathParts = filePath.split(path.sep);
-                const uploadsIndex = pathParts.indexOf('uploads');
-                if (uploadsIndex !== -1) {
-                    relativePath = '/' + pathParts.slice(uploadsIndex + 1).join('/');
-                } else {
-                    relativePath = '/' + file.filename;
-                }
+                relativePath = '/' + file.filename;
             }
             
             return {

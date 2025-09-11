@@ -36,9 +36,16 @@ const storage = multer.diskStorage({
 
 // File filter to allow only images and videos
 const fileFilter = (req, file, cb) => {
+    console.log('File upload attempt:', {
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        fieldname: file.fieldname
+    });
+    
     if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
         cb(null, true);
     } else {
+        console.error('File type not allowed:', file.mimetype);
         cb(new Error('فقط فایل‌های تصویری و ویدیو مجاز است'), false);
     }
 };
@@ -48,7 +55,9 @@ const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 50 * 1024 * 1024 // 50MB limit
+        fileSize: 100 * 1024 * 1024, // 100MB limit for videos
+        fieldSize: 100 * 1024 * 1024, // 100MB field size limit
+        files: 1 // Single file upload
     }
 });
 
@@ -59,6 +68,12 @@ exports.uploadFile = async (req, res) => {
         upload.single('file')(req, res, (err) => {
             if (err) {
                 console.error('Upload error:', err);
+                if (err.code === 'LIMIT_FILE_SIZE') {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'حجم فایل بیش از حد مجاز است (حداکثر 50 مگابایت)'
+                    });
+                }
                 return res.status(400).json({
                     success: false,
                     message: err.message || 'خطا در آپلود فایل'
@@ -73,7 +88,8 @@ exports.uploadFile = async (req, res) => {
             }
 
             // Generate URL for the uploaded file
-            const relativePath = req.file.path.split('uploads')[1].replace(/\\/g, '/');
+            const uploadsIndex = req.file.path.indexOf('uploads');
+            const relativePath = req.file.path.substring(uploadsIndex + 'uploads'.length).replace(/\\/g, '/');
             const fileUrl = `/uploads${relativePath}`;
 
             res.json({
@@ -101,6 +117,12 @@ exports.uploadMultipleFiles = async (req, res) => {
         upload.array('files', 10)(req, res, (err) => {
             if (err) {
                 console.error('Upload error:', err);
+                if (err.code === 'LIMIT_FILE_SIZE') {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'حجم فایل بیش از حد مجاز است (حداکثر 50 مگابایت)'
+                    });
+                }
                 return res.status(400).json({
                     success: false,
                     message: err.message || 'خطا در آپلود فایل‌ها'
@@ -115,7 +137,8 @@ exports.uploadMultipleFiles = async (req, res) => {
             }
 
             const uploadedFiles = req.files.map(file => {
-                const relativePath = file.path.split('uploads')[1].replace(/\\/g, '/');
+                const uploadsIndex = file.path.indexOf('uploads');
+                const relativePath = file.path.substring(uploadsIndex + 'uploads'.length).replace(/\\/g, '/');
                 return {
                     filename: file.filename,
                     originalName: file.originalname,

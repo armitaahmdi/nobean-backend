@@ -22,7 +22,8 @@ const uploadRouter = require("./src/router/uploadRouter")
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر درست بده
 
 
-app.use(express.json())
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(helmet());
 
 // Serve static files from uploads directory

@@ -43,7 +43,7 @@ exports.getAll = async (req, res) => {
         id: t.id,
         title: t.title,
         imagepath: t.imagepath,
-        shortDescription: t.shortDescription,
+        shortDescription: t.ShortDescription,
         price: t.price,
         target_audience: t.target_audience,
         category: t.category,
@@ -121,7 +121,7 @@ exports.getTest = async (req, res) => {
 
     const testData = await test.findOne({
       where: { id },
-      attributes: ['id', 'title', 'time', 'shortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'category', 'suitablefor','tags'  ]
+      attributes: ['id', 'title', 'time', 'shortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'category', 'suitablefor', 'tags']
     });
 
     if (!testData) {

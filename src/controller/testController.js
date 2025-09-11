@@ -50,7 +50,8 @@ exports.getAll = async (req, res) => {
         time: t.time,
         question_count,
         participantCount,
-        createdAt: t.createdAt
+        createdAt: t.createdAt,
+        descriptionVideo: t.descriptionVideo
         //rating
       })
     }
@@ -66,7 +67,7 @@ exports.getAll = async (req, res) => {
 
 exports.createTest = async (req, res) => {
   try {
-    const { title, time, mainDescription, ShortDescription, target_audience, price, category, imagepath, suitableFor, tags } = req.body
+    const { title, time, mainDescription, ShortDescription, target_audience, price, category, imagepath, suitableFor, tags, descriptionVideo } = req.body
 
     if (!title || !time || !mainDescription || !ShortDescription || !target_audience || !price || !category || !suitableFor) {
       return res.status(400).json({ error: 'لطفاً تمام فیلدها را پر کنید.' });
@@ -82,7 +83,8 @@ exports.createTest = async (req, res) => {
       category,
       imagepath,
       suitableFor,
-      tags
+      tags,
+      descriptionVideo
     });
 
     res.status(201).json({ message: 'تست با موفقیت ایجاد شد', test: newTest });
@@ -121,7 +123,7 @@ exports.getTest = async (req, res) => {
 
     const testData = await test.findOne({
       where: { id },
-      attributes: ['id', 'title', 'time', 'ShortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'category', 'suitablefor', 'tags', 'createdAt']
+      attributes: ['id', 'title', 'time', 'ShortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'category', 'suitablefor', 'tags', 'createdAt', 'descriptionVideo']
     });
 
     if (!testData) {

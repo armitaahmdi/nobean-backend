@@ -66,6 +66,11 @@ suitableFor: {
   tags: {
   type: DataTypes.JSON,
   allowNull: true
+},
+descriptionVideo: {
+  type: DataTypes.STRING,
+  allowNull: true,
+  comment: 'URL of description video'
 }
 
     

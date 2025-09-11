@@ -73,7 +73,8 @@ exports.uploadFile = async (req, res) => {
             }
 
             // Generate URL for the uploaded file
-            const fileUrl = `/uploads/${req.file.path.split('uploads')[1].replace(/\\/g, '/')}`;
+            const relativePath = req.file.path.split('uploads')[1].replace(/\\/g, '/');
+            const fileUrl = `/uploads${relativePath}`;
 
             res.json({
                 success: true,
@@ -113,13 +114,16 @@ exports.uploadMultipleFiles = async (req, res) => {
                 });
             }
 
-            const uploadedFiles = req.files.map(file => ({
-                filename: file.filename,
-                originalName: file.originalname,
-                url: `/uploads/${file.path.split('uploads')[1].replace(/\\/g, '/')}`,
-                size: file.size,
-                mimetype: file.mimetype
-            }));
+            const uploadedFiles = req.files.map(file => {
+                const relativePath = file.path.split('uploads')[1].replace(/\\/g, '/');
+                return {
+                    filename: file.filename,
+                    originalName: file.originalname,
+                    url: `/uploads${relativePath}`,
+                    size: file.size,
+                    mimetype: file.mimetype
+                };
+            });
 
             res.json({
                 success: true,

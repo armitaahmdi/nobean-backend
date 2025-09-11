@@ -294,8 +294,28 @@ exports.uploadFile = async (req, res) => {
             return res.status(400).json({ success: false, message: 'هیچ فایلی انتخاب نشده است' });
         }
 
-        const relativePath = req.file.path.split('uploads')[1].replace(/\\/g, '/');
+        // Generate URL for the uploaded file
+        const filePath = req.file.path;
+        console.log('File path:', filePath);
+        
+        const uploadsIndex = filePath.indexOf('uploads');
+        let relativePath;
+        
+        if (uploadsIndex !== -1) {
+            relativePath = filePath.substring(uploadsIndex + 'uploads'.length).replace(/\\/g, '/');
+        } else {
+            // Fallback: extract path after uploads directory
+            const pathParts = filePath.split(path.sep);
+            const uploadsIndex = pathParts.indexOf('uploads');
+            if (uploadsIndex !== -1) {
+                relativePath = '/' + pathParts.slice(uploadsIndex + 1).join('/');
+            } else {
+                relativePath = '/' + req.file.filename;
+            }
+        }
+        
         const fileUrl = `/uploads${relativePath}`;
+        console.log('Generated URL:', fileUrl);
 
         res.json({
             success: true,
@@ -325,7 +345,23 @@ exports.uploadMultipleFiles = async (req, res) => {
         }
 
         const uploadedFiles = req.files.map(file => {
-            const relativePath = file.path.split('uploads')[1].replace(/\\/g, '/');
+            const filePath = file.path;
+            const uploadsIndex = filePath.indexOf('uploads');
+            let relativePath;
+            
+            if (uploadsIndex !== -1) {
+                relativePath = filePath.substring(uploadsIndex + 'uploads'.length).replace(/\\/g, '/');
+            } else {
+                // Fallback: extract path after uploads directory
+                const pathParts = filePath.split(path.sep);
+                const uploadsIndex = pathParts.indexOf('uploads');
+                if (uploadsIndex !== -1) {
+                    relativePath = '/' + pathParts.slice(uploadsIndex + 1).join('/');
+                } else {
+                    relativePath = '/' + file.filename;
+                }
+            }
+            
             return {
                 filename: file.filename,
                 originalName: file.originalname,

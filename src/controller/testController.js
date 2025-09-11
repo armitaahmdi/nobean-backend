@@ -49,7 +49,8 @@ exports.getAll = async (req, res) => {
         category: t.category,
         time: t.time,
         question_count,
-        participantCount
+        participantCount,
+        createdAt: t.createdAt
         //rating
       })
     }
@@ -121,7 +122,7 @@ exports.getTest = async (req, res) => {
 
     const testData = await test.findOne({
       where: { id },
-      attributes: ['id', 'title', 'time', 'ShortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'category', 'suitablefor', 'tags']
+      attributes: ['id', 'title', 'time', 'ShortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'category', 'suitablefor', 'tags', 'createdAt']
     });
 
     if (!testData) {

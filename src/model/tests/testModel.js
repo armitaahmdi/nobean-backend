@@ -68,8 +68,10 @@ suitableFor: {
   allowNull: true
 }
 
-
     
+  }, {
+    timestamps: true, // This will add createdAt and updatedAt fields
+    tableName: 'exam' // Ensure we're using the correct table name
   });
 
   return Exam;

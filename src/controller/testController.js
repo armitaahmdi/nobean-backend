@@ -4,54 +4,57 @@ const { where } = require("sequelize");
 
 const test = db.test
 const question = db.Question
-const  categoryTest = db.Categorytest
+const categoryTest = db.Categorytest
 const Items = db.Item
 const userTest = db.userTest
-const  Comment = db.Comment
+const Comment = db.Comment
 const User = db.User;
 
 
-exports.getAll = async (req , res) => {
+exports.getAll = async (req, res) => {
   try {
 
-   const tests = await test.findAll({
-    order:[['createdat' , 'DESC']],
-    limit:100
-   })
+    const tests = await test.findAll({
+      order: [['createdAt', 'DESC']], limit: 100
+    })
 
-   const testresult = []
+    const testresult = []
 
-   for(const t of tests ){
-    const qouestions = await question.findAll({where:{
-      examId : t.id
-    
-    }})
-    const  participants = await userTest.findAll({where:{
-          examId : t.id
-    }})
+    for (const t of tests) {
+      const qouestions = await question.findAll({
+        where: {
+          examId: t.id
+
+        }
+      })
+      const participants = await userTest.findAll({
+        where: {
+          examId: t.id
+        }
+      })
 
 
-    const question_count = qouestions.length
-    
+      const question_count = qouestions.length
 
-    const participantCount = participants.length
 
-   testresult.push({
-    id : t.id,
-    title: t.title,
-    imagepath:t.imagepath ,
-    shortDescription:t.shortDescription,
-    price:t.price,
-    target_audience:t.target_audience,
-    category: t.category,
-    time:t.time,
-    question_count,
-    participantCount
-    //rating
-   })
-   }
+      const participantCount = participants.length
 
-res.status(200).json(testresult);
+      testresult.push({
+        id: t.id,
+        title: t.title,
+        imagepath: t.imagepath,
+        shortDescription: t.shortDescription,
+        price: t.price,
+        target_audience: t.target_audience,
+        category: t.category,
+        time: t.time,
+        question_count,
+        participantCount
+        //rating
+      })
+    }
+
+    res.status(200).json(testresult);
 
   } catch (err) {
     console.error('خطا در دریافت تست‌ها:', err);
@@ -60,15 +63,15 @@ res.status(200).json(testresult);
 };
 
 
-exports.createTest= async (req, res) => {
-try{
-const {title , time , date , mainDescription , ShortDescription , target_audience , price ,category,  imagepath , suitableFor,tags} = req.body
+exports.createTest = async (req, res) => {
+  try {
+    const { title, time, date, mainDescription, ShortDescription, target_audience, price, category, imagepath, suitableFor, tags } = req.body
 
-if (!title || !time || !date || !mainDescription || !ShortDescription || !target_audience || !price || !category || !suitableFor) {
+    if (!title || !time || !date || !mainDescription || !ShortDescription || !target_audience || !price || !category || !suitableFor) {
       return res.status(400).json({ error: 'لطفاً تمام فیلدها را پر کنید.' });
     }
 
- const newTest = await test.create({
+    const newTest = await test.create({
       title,
       time,
       date,
@@ -77,50 +80,54 @@ if (!title || !time || !date || !mainDescription || !ShortDescription || !target
       target_audience,
       price,
       category,
-     imagepath,
-     suitableFor,
-     tags
+      imagepath,
+      suitableFor,
+      tags
     });
 
     res.status(201).json({ message: 'تست با موفقیت ایجاد شد', test: newTest });
 
-}catch (err) {
+  } catch (err) {
     console.error('خطا در ایجاد تست‌ها:', err);
     res.status(500).json({ error: 'مشکلی در ایجاد تست‌ها به وجود آمد.' });
   }
 }
 
 
-exports.getTest = async  (req , res) => {
+exports.getTest = async (req, res) => {
 
-  try{ 
-const id = req.params.id
- const qouestions = await question.findAll({where:{
-      examId : id
-    }})
+  try {
+    const id = req.params.id
+    const qouestions = await question.findAll({
+      where: {
+        examId: id
+      }
+    })
     const question_count = qouestions.length
 
 
-     const  participants = await userTest.findAll({where:{
-          examId : id
-    }})
+    const participants = await userTest.findAll({
+      where: {
+        examId: id
+      }
+    })
 
-       const participantCount = participants.length
-
-
-const categrys = await categoryTest.findAll({where:{testId:id }})
-
+    const participantCount = participants.length
 
 
-   const testData = await test.findOne({
+    const categrys = await categoryTest.findAll({ where: { testId: id } })
+
+
+
+    const testData = await test.findOne({
       where: { id },
-      attributes: ['id', 'title', 'shortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price' , 'suitablefor','tags'  ]
+      attributes: ['id', 'title', 'shortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'suitablefor', 'tags']
     });
 
     if (!testData) {
       return res.status(404).json({ error: 'تست مورد نظر پیدا نشد.' });
     }
-const comments = await Comment.findAll({
+    const comments = await Comment.findAll({
       where: {
         section_type: "test",
         section_id: id,
@@ -133,7 +140,7 @@ const comments = await Comment.findAll({
       ],
       order: [["createdAt", "DESC"]], // آخرین کامنت‌ها بیاد بالا
     });
-     const result = {
+    const result = {
       ...testData.toJSON(),
       question_count,
       categrys,
@@ -143,11 +150,11 @@ const comments = await Comment.findAll({
 
     res.status(200).json(result);
 
- }catch(err){
-  console.error('خطا در پیدا کردن '  ,err);
-  res.status(500).json({error:'مشکلی در پیدا کردن تست به وجود آمده'})
-  
- }
+  } catch (err) {
+    console.error('خطا در پیدا کردن ', err);
+    res.status(500).json({ error: 'مشکلی در پیدا کردن تست به وجود آمده' })
+
+  }
 
 }
 
@@ -172,47 +179,47 @@ exports.deleteTest = async (req, res) => {
 };
 
 
-exports.createTestQuestion = async (req , res ) => { 
+exports.createTestQuestion = async (req, res) => {
 
-  try{ 
-    const {id} = req.params
-    const {title , items ,  correctIndex } = req.body
+  try {
+    const { id } = req.params
+    const { title, items, correctIndex } = req.body
 
-    if(!title ||  !Array.isArray(items) || items.length === 0 || correctIndex === undefined){
-         return res.status(400).json({ error: "اطلاعات ناقص است" });
+    if (!title || !Array.isArray(items) || items.length === 0 || correctIndex === undefined) {
+      return res.status(400).json({ error: "اطلاعات ناقص است" });
     }
 
     if (correctIndex < 0 || correctIndex >= items.length) {
-        return res.status(400).json({ error: "اندیس گزینه صحیح نامعتبر است" });
+      return res.status(400).json({ error: "اندیس گزینه صحیح نامعتبر است" });
     }
 
-      const createQuestion = await question.create({
-        examId : id ,
-        title
-      })
-      if (!createQuestion){
-        return res.status(401).json({message:'سوال ثبت نشد لطفا دوباره امتحان کنید '})
-      }
+    const createQuestion = await question.create({
+      examId: id,
+      title
+    })
+    if (!createQuestion) {
+      return res.status(401).json({ message: 'سوال ثبت نشد لطفا دوباره امتحان کنید ' })
+    }
 
-      const createItems = await Items.create({
-        questionId: createQuestion.id , 
-        items ,
-        correctIndex
-      })
+    const createItems = await Items.create({
+      questionId: createQuestion.id,
+      items,
+      correctIndex
+    })
 
-      if(!createItems){
-           return res.status(401).json({message:'جواب ثبت نشد لطفا دوباره امتحان کنید '})
-      }
+    if (!createItems) {
+      return res.status(401).json({ message: 'جواب ثبت نشد لطفا دوباره امتحان کنید ' })
+    }
 
-         res.status(200).json({
-            message: "سوال با موفقیت ثبت شد",
-            question: createQuestion,
-            options: createItems
-         });
-    
-  }catch(error){
-        console.error('خطا در سرور برای ساخت سوال  :', error);
-          return res.status(500).json({ message: 'خطا در سرور برای ساخت سوال ' });
+    res.status(200).json({
+      message: "سوال با موفقیت ثبت شد",
+      question: createQuestion,
+      options: createItems
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای ساخت سوال  :', error);
+    return res.status(500).json({ message: 'خطا در سرور برای ساخت سوال ' });
   }
 
 }

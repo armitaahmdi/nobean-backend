@@ -25,6 +25,9 @@ const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر �
 app.use(express.json())
 app.use(helmet());
 
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
+
 const corsOptions = {
   origin: function(origin, callback){
     if(!origin) return callback(null, true); // مثلا Postman یا curl

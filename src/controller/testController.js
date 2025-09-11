@@ -121,7 +121,7 @@ exports.getTest = async (req, res) => {
 
     const testData = await test.findOne({
       where: { id },
-      attributes: ['id', 'title', 'shortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price', 'suitablefor', 'tags']
+      attributes: ['id', 'title', 'time', 'shortDescription', 'mainDescription', 'imagePath', 'participants', 'target_audience', 'price' , 'suitablefor','tags'  ]
     });
 
     if (!testData) {

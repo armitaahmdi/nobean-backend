@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
           defaultValue:0
     },
     target_audience: {
-       type: DataTypes.ENUM('ویژه فرزندان', 'ویژه والدین'),
+       type: DataTypes.ENUM('ویژه فرزندان', 'ویژه والدین', 'ویژه والدین و فرزندان'),
        allowNull: false,
        defaultValue: 'ویژه فرزندان'
 },

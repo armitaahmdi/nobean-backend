@@ -227,7 +227,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Configure multer for file uploads
+// Allowed video types
+const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/mkv', 'video/quicktime'];
+
+// Configure multer storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadDir = path.join(__dirname, '../../uploads');
@@ -236,48 +239,63 @@ const storage = multer.diskStorage({
         }
 
         let subDir = 'general';
-        if (file.mimetype.startsWith('image/')) subDir = 'images';
-        else if (file.mimetype.startsWith('video/')) subDir = 'videos';
+        if (file.mimetype.startsWith('image/')) {
+            subDir = 'images';
+        } else if (allowedVideoTypes.includes(file.mimetype) || file.mimetype.startsWith('video/')) {
+            subDir = 'videos';
+        }
 
         const fullPath = path.join(uploadDir, subDir);
-        if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, { recursive: true });
+        if (!fs.existsSync(fullPath)) {
+            fs.mkdirSync(fullPath, { recursive: true });
+        }
 
         cb(null, fullPath);
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
         cb(null, file.fieldname + '-' + uniqueSuffix + ext);
     }
 });
 
+// File filter
 const fileFilter = (req, file, cb) => {
-    console.log('File upload attempt:', file.originalname, file.mimetype);
-    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) cb(null, true);
-    else cb(new Error('فقط فایل‌های تصویری و ویدیو مجاز است'), false);
+    console.log('Attempting upload:', file.originalname, file.mimetype);
+
+    if (file.mimetype.startsWith('image/') || allowedVideoTypes.includes(file.mimetype) || file.mimetype.startsWith('video/')) {
+        cb(null, true);
+    } else {
+        cb(new Error('فقط فایل‌های تصویری و ویدیو مجاز است'), false);
+    }
 };
 
+// Multer configuration
 const upload = multer({
-    storage,
-    fileFilter,
+    storage: storage,
+    fileFilter: fileFilter,
     limits: {
-        fileSize: 100 * 1024 * 1024 // 100MB
+        fileSize: 100 * 1024 * 1024 // 100MB limit
     }
 });
 
-exports.uploadFile = (req, res) => {
+// Upload single file
+exports.uploadFile = async (req, res) => {
     upload.single('file')(req, res, (err) => {
         if (err) {
             console.error('Upload error:', err);
-            if (err.code === 'LIMIT_FILE_SIZE') return res.status(400).json({ success: false, message: 'حجم فایل بیش از حد مجاز است (حداکثر 100 مگابایت)' });
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ success: false, message: 'حجم فایل بیش از حد مجاز است (حداکثر 100 مگابایت)' });
+            }
             return res.status(400).json({ success: false, message: err.message || 'خطا در آپلود فایل' });
         }
 
-        if (!req.file) return res.status(400).json({ success: false, message: 'هیچ فایلی انتخاب نشده است' });
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'هیچ فایلی انتخاب نشده است' });
+        }
 
-        // Use path.relative to get URL
-        const relativePath = path.relative(path.join(__dirname, '../../uploads'), req.file.path).replace(/\\/g, '/');
-        const fileUrl = `/uploads/${relativePath}`;
+        const relativePath = req.file.path.split('uploads')[1].replace(/\\/g, '/');
+        const fileUrl = `/uploads${relativePath}`;
 
         res.json({
             success: true,
@@ -291,22 +309,27 @@ exports.uploadFile = (req, res) => {
     });
 };
 
-exports.uploadMultipleFiles = (req, res) => {
+// Upload multiple files
+exports.uploadMultipleFiles = async (req, res) => {
     upload.array('files', 10)(req, res, (err) => {
         if (err) {
             console.error('Upload error:', err);
-            if (err.code === 'LIMIT_FILE_SIZE') return res.status(400).json({ success: false, message: 'حجم فایل بیش از حد مجاز است (حداکثر 100 مگابایت)' });
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ success: false, message: 'حجم فایل بیش از حد مجاز است (حداکثر 100 مگابایت)' });
+            }
             return res.status(400).json({ success: false, message: err.message || 'خطا در آپلود فایل‌ها' });
         }
 
-        if (!req.files || req.files.length === 0) return res.status(400).json({ success: false, message: 'هیچ فایلی انتخاب نشده است' });
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ success: false, message: 'هیچ فایلی انتخاب نشده است' });
+        }
 
         const uploadedFiles = req.files.map(file => {
-            const relativePath = path.relative(path.join(__dirname, '../../uploads'), file.path).replace(/\\/g, '/');
+            const relativePath = file.path.split('uploads')[1].replace(/\\/g, '/');
             return {
                 filename: file.filename,
                 originalName: file.originalname,
-                url: `/uploads/${relativePath}`,
+                url: `/uploads${relativePath}`,
                 size: file.size,
                 mimetype: file.mimetype
             };
@@ -320,10 +343,12 @@ exports.uploadMultipleFiles = (req, res) => {
     });
 };
 
-exports.deleteFile = (req, res) => {
+// Delete file
+exports.deleteFile = async (req, res) => {
     try {
         const { filename } = req.params;
         const filePath = path.join(__dirname, '../../uploads', filename);
+
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
             res.json({ success: true, message: 'فایل با موفقیت حذف شد' });

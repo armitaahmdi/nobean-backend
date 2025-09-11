@@ -66,16 +66,15 @@ exports.getAll = async (req, res) => {
 
 exports.createTest = async (req, res) => {
   try {
-    const { title, time, date, mainDescription, ShortDescription, target_audience, price, category, imagepath, suitableFor, tags } = req.body
+    const { title, time, mainDescription, ShortDescription, target_audience, price, category, imagepath, suitableFor, tags } = req.body
 
-    if (!title || !time || !date || !mainDescription || !ShortDescription || !target_audience || !price || !category || !suitableFor) {
+    if (!title || !time || !mainDescription || !ShortDescription || !target_audience || !price || !category || !suitableFor) {
       return res.status(400).json({ error: 'لطفاً تمام فیلدها را پر کنید.' });
     }
 
     const newTest = await test.create({
       title,
       time,
-      date,
       mainDescription,
       ShortDescription,
       target_audience,

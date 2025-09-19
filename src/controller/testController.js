@@ -348,11 +348,16 @@ exports.deleteQuestion = async (req, res) => {
 exports.submitExam = async (req, res) => {
   try {
     const { testId } = req.params;
-    const { answers, userId } = req.body;
+    const { answers } = req.body;
+    const userId = req.user?.id;
 
     // اعتبارسنجی ورودی
     if (!answers || !Array.isArray(answers)) {
       return res.status(400).json({ error: 'پاسخ‌ها باید آرایه باشند' });
+    }
+
+    if (!userId) {
+      return res.status(401).json({ error: 'کاربر احراز هویت نشده است' });
     }
 
     // دریافت سوالات آزمون
@@ -372,14 +377,22 @@ exports.submitExam = async (req, res) => {
 
     // محاسبه نمره
     let correctAnswers = 0;
-    questions.forEach((q, index) => {
+    const processedAnswers = questions.map((q, index) => {
       const correctIndex = q.Items?.[0]?.correctIndex || 0;
       const userAnswer = answers[index];
       const correctAnswer = q.Items?.[0]?.items?.[correctIndex];
+      const isCorrect = userAnswer === correctAnswer;
       
-      if (userAnswer === correctAnswer) {
+      if (isCorrect) {
         correctAnswers++;
       }
+      
+      return {
+        questionId: q.id,
+        userAnswer: userAnswer,
+        correctAnswer: correctAnswer,
+        isCorrect: isCorrect
+      };
     });
 
     const score = Math.round((correctAnswers / questions.length) * 100);
@@ -387,8 +400,8 @@ exports.submitExam = async (req, res) => {
     // ذخیره نتیجه آزمون
     const examResult = await userTest.create({
       examId: testId,
-      userId: userId || req.user?.id,
-      answers: JSON.stringify(answers),
+      userId: userId,
+      answers: JSON.stringify(processedAnswers),
       score: score,
       completedAt: new Date()
     });
@@ -428,11 +441,17 @@ exports.getExamResult = async (req, res) => {
       return res.status(404).json({ error: 'نتیجه آزمون یافت نشد' });
     }
 
+    // محاسبه تعداد پاسخ‌های صحیح
+    const answers = JSON.parse(examResult.answers);
+    const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+
     res.status(200).json({
       result: {
         id: examResult.id,
         score: examResult.score,
-        answers: JSON.parse(examResult.answers),
+        correctAnswers: correctAnswers,
+        totalQuestions: answers.length,
+        answers: answers,
         completedAt: examResult.completedAt
       }
     });
@@ -440,5 +459,129 @@ exports.getExamResult = async (req, res) => {
   } catch (error) {
     console.error('خطا در سرور برای دریافت نتیجه آزمون:', error);
     return res.status(500).json({ message: 'خطا در سرور برای دریافت نتیجه آزمون' });
+  }
+};
+
+// دریافت تمام نتایج آزمون برای پنل ادمین
+exports.getExamResults = async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const { page = 1, limit = 10, search = '' } = req.query;
+
+    // دریافت نتایج آزمون با اطلاعات کاربر
+    const results = await userTest.findAndCountAll({
+      where: { 
+        examId: testId
+      },
+      include: [
+        {
+          model: db.User,
+          as: 'User',
+          attributes: ['id', 'name', 'email', 'phone']
+        }
+      ],
+      order: [['completedAt', 'DESC']],
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit)
+    });
+
+    // پردازش نتایج
+    const processedResults = results.rows.map(result => {
+      const answers = JSON.parse(result.answers);
+      const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+      
+      return {
+        id: result.id,
+        userId: result.userId,
+        userName: result.User?.name || 'نامشخص',
+        userEmail: result.User?.email || 'نامشخص',
+        userPhone: result.User?.phone || 'نامشخص',
+        score: result.score,
+        correctAnswers: correctAnswers,
+        totalQuestions: answers.length,
+        completedAt: result.completedAt,
+        timeSpent: result.timeSpent,
+        status: result.status
+      };
+    });
+
+    res.status(200).json({
+      results: processedResults,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(results.count / parseInt(limit)),
+        totalResults: results.count,
+        hasNext: parseInt(page) < Math.ceil(results.count / parseInt(limit)),
+        hasPrev: parseInt(page) > 1
+      }
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای دریافت نتایج آزمون:', error);
+    return res.status(500).json({ message: 'خطا در سرور برای دریافت نتایج آزمون' });
+  }
+};
+
+// دریافت آمار کلی آزمون
+exports.getExamStatistics = async (req, res) => {
+  try {
+    const { testId } = req.params;
+
+    // آمار کلی
+    const totalAttempts = await userTest.count({
+      where: { examId: testId }
+    });
+
+    const completedAttempts = await userTest.count({
+      where: { 
+        examId: testId,
+        status: 'completed'
+      }
+    });
+
+    const averageScore = await userTest.findOne({
+      where: { 
+        examId: testId,
+        status: 'completed'
+      },
+      attributes: [
+        [db.sequelize.fn('AVG', db.sequelize.col('score')), 'averageScore']
+      ],
+      raw: true
+    });
+
+    // توزیع نمرات
+    const scoreDistribution = await userTest.findAll({
+      where: { 
+        examId: testId,
+        status: 'completed'
+      },
+      attributes: [
+        [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'count'],
+        [db.sequelize.fn('CASE', 
+          db.sequelize.literal('WHEN score >= 90 THEN "90-100"'),
+          db.sequelize.literal('WHEN score >= 80 THEN "80-89"'),
+          db.sequelize.literal('WHEN score >= 70 THEN "70-79"'),
+          db.sequelize.literal('WHEN score >= 60 THEN "60-69"'),
+          db.sequelize.literal('ELSE "0-59"')
+        ), 'scoreRange']
+      ],
+      group: ['scoreRange'],
+      raw: true
+    });
+
+    res.status(200).json({
+      statistics: {
+        totalAttempts,
+        completedAttempts,
+        averageScore: Math.round(averageScore.averageScore || 0),
+        completionRate: totalAttempts > 0 ? Math.round((completedAttempts / totalAttempts) * 100) : 0,
+        scoreDistribution
+      }
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای دریافت آمار آزمون:', error);
+    return res.status(500).json({ message: 'خطا در سرور برای دریافت آمار آزمون' });
   }
 };

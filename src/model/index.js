@@ -78,17 +78,12 @@ db.test.belongsToMany(db.Category, {
   foreignKey: 'testId',
 });
 
-db.User.belongsToMany(db.test, {
-  through: db.userTest,
-  foreignKey: 'userId',
-  otherKey: 'testId',
-});
+// UserTest associations
+db.User.hasMany(db.userTest, { foreignKey: 'userId', as: 'User' });
+db.userTest.belongsTo(db.User, { foreignKey: 'userId', as: 'User' });
 
-db.test.belongsToMany(db.User, {
-  through: db.userTest,
-  foreignKey: 'testId',
-  otherKey: 'userId',
-});
+db.test.hasMany(db.userTest, { foreignKey: 'examId' });
+db.userTest.belongsTo(db.test, { foreignKey: 'examId' });
 
 db.Product.belongsToMany(db.Category, {
   through: db.CategoryProduct, // اسم جدول واسطه

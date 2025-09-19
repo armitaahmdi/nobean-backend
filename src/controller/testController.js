@@ -15,7 +15,8 @@ exports.getAll = async (req, res) => {
   try {
 
     const tests = await test.findAll({
-      order: [['createdAt', 'DESC'], limit: 100]
+      order: [['createdAt', 'DESC']],
+      limit: 100
     })
     res.status(200).json(tests)
   } catch (error) {

@@ -299,3 +299,121 @@ exports.deleteQuestion = async (req, res) => {
     res.status(500).json({ message: "خطا در سرور برای حذف سوال" });
   }
 };
+
+// Submit exam - ارسال آزمون
+exports.submitExam = async (req, res) => {
+  try {
+    const { id: testId } = req.params;
+    const { answers, timeSpent } = req.body;
+    const userId = req.user.id;
+
+    console.log('Submit exam request:', { testId, userId, answers, timeSpent });
+
+    // بررسی وجود آزمون
+    const existingTest = await test.findByPk(testId);
+    if (!existingTest) {
+      return res.status(404).json({ error: "آزمون مورد نظر پیدا نشد" });
+    }
+
+    // دریافت سوالات آزمون
+    const questions = await question.findAll({
+      where: { testId: testId },
+      include: [{
+        model: Items,
+        as: 'Items'
+      }]
+    });
+
+    if (!questions || questions.length === 0) {
+      return res.status(400).json({ error: "این آزمون سوالی ندارد" });
+    }
+
+    // محاسبه نمره
+    let correctAnswers = 0;
+    const totalQuestions = questions.length;
+
+    questions.forEach(q => {
+      const userAnswer = answers[q.id];
+      const correctAnswer = q.Items?.[0]?.correctIndex;
+      
+      if (userAnswer === correctAnswer) {
+        correctAnswers++;
+      }
+    });
+
+    const score = Math.round((correctAnswers / totalQuestions) * 100);
+
+    // ذخیره یا به‌روزرسانی نتیجه آزمون
+    const [userTestResult, created] = await userTest.upsert({
+      userId: userId,
+      testId: testId,
+      answers: JSON.stringify(answers),
+      score: score,
+      correctAnswers: correctAnswers,
+      totalQuestions: totalQuestions,
+      timeSpent: timeSpent || 0,
+      status: 'completed',
+      completedAt: new Date()
+    }, {
+      where: {
+        userId: userId,
+        testId: testId
+      }
+    });
+
+    console.log('Exam submitted successfully:', { score, correctAnswers, totalQuestions });
+
+    res.status(200).json({
+      message: "آزمون با موفقیت ارسال شد",
+      result: {
+        score: score,
+        correctAnswers: correctAnswers,
+        totalQuestions: totalQuestions,
+        completedAt: userTestResult.completedAt
+      }
+    });
+
+  } catch (error) {
+    console.error("خطا در ارسال آزمون:", error);
+    res.status(500).json({ message: "خطا در ارسال آزمون" });
+  }
+};
+
+// Get exam result - دریافت نتیجه آزمون
+exports.getExamResult = async (req, res) => {
+  try {
+    const { id: testId } = req.params;
+    const userId = req.user.id;
+
+    console.log('Get exam result request:', { testId, userId });
+
+    // دریافت نتیجه آزمون
+    const userTestResult = await userTest.findOne({
+      where: {
+        userId: userId,
+        testId: testId
+      }
+    });
+
+    if (!userTestResult) {
+      return res.status(404).json({ error: "نتیجه آزمون یافت نشد" });
+    }
+
+    console.log('Exam result found:', userTestResult);
+
+    res.status(200).json({
+      message: "نتیجه آزمون دریافت شد",
+      result: {
+        score: userTestResult.score,
+        correctAnswers: userTestResult.correctAnswers,
+        totalQuestions: userTestResult.totalQuestions,
+        completedAt: userTestResult.completedAt,
+        timeSpent: userTestResult.timeSpent
+      }
+    });
+
+  } catch (error) {
+    console.error("خطا در دریافت نتیجه آزمون:", error);
+    res.status(500).json({ message: "خطا در دریافت نتیجه آزمون" });
+  }
+};

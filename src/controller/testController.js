@@ -248,4 +248,99 @@ exports.showQuestion = async (req, res) => {
     console.error('خطا در سرور برای نمایش سوالات:', error);
     return res.status(500).json({ message: 'خطا در سرور برای نمایش سوالات' });
   }
+}
+
+exports.updateQuestion = async (req, res) => {
+  try {
+    const { id: examId, questionId } = req.params;
+    const { title, items, correctIndex } = req.body;
+
+    // اعتبارسنجی ورودی
+    if (!title || !items || !Array.isArray(items) || correctIndex === undefined) {
+      return res.status(400).json({ error: 'اطلاعات ناقص است' });
+    }
+
+    if (correctIndex < 0 || correctIndex >= items.length) {
+      return res.status(400).json({ error: 'اندیس پاسخ صحیح نامعتبر است' });
+    }
+
+    // بررسی وجود سوال
+    const existingQuestion = await question.findOne({
+      where: { 
+        id: questionId,
+        examId: examId 
+      }
+    });
+
+    if (!existingQuestion) {
+      return res.status(404).json({ error: 'سوال مورد نظر پیدا نشد' });
+    }
+
+    // به‌روزرسانی سوال
+    await question.update(
+      { title },
+      { where: { id: questionId } }
+    );
+
+    // به‌روزرسانی گزینه‌ها
+    await Items.update(
+      { items, correctIndex },
+      { where: { questionId: questionId } }
+    );
+
+    // دریافت سوال به‌روزرسانی شده
+    const updatedQuestion = await question.findByPk(questionId, {
+      include: [
+        {
+          model: Items,
+          as: 'Items'
+        }
+      ]
+    });
+
+    res.status(200).json({
+      message: "سوال با موفقیت به‌روزرسانی شد",
+      question: updatedQuestion
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای به‌روزرسانی سوال:', error);
+    return res.status(500).json({ message: 'خطا در سرور برای به‌روزرسانی سوال' });
+  }
+}
+
+exports.deleteQuestion = async (req, res) => {
+  try {
+    const { id: examId, questionId } = req.params;
+
+    // بررسی وجود سوال
+    const existingQuestion = await question.findOne({
+      where: { 
+        id: questionId,
+        examId: examId 
+      }
+    });
+
+    if (!existingQuestion) {
+      return res.status(404).json({ error: 'سوال مورد نظر پیدا نشد' });
+    }
+
+    // حذف گزینه‌ها
+    await Items.destroy({
+      where: { questionId: questionId }
+    });
+
+    // حذف سوال
+    await question.destroy({
+      where: { id: questionId }
+    });
+
+    res.status(200).json({
+      message: "سوال با موفقیت حذف شد"
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای حذف سوال:', error);
+    return res.status(500).json({ message: 'خطا در سرور برای حذف سوال' });
+  }
 };

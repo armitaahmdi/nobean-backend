@@ -474,6 +474,121 @@ router.post("/:id/questions", authMiddleware, isAdmin, testController.createTest
  */
 
 router.get("/:id/questions",authMiddleware,testController.showQuestion)
+/**
+ * @swagger
+ * /api/v1/tests/{id}/questions/{questionId}:
+ *   put:
+ *     summary: ویرایش سوال موجود (فقط ادمین‌ها)
+ *     tags:
+ *       - Tests
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: شناسه تست
+ *         example: 123
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: شناسه سوال
+ *         example: 55
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - items
+ *               - correctIndex
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "سوال ویرایش شده"
+ *               items:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["گزینه اول", "گزینه دوم", "گزینه سوم", "گزینه چهارم"]
+ *               correctIndex:
+ *                 type: integer
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: سوال با موفقیت به‌روزرسانی شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "سوال با موفقیت به‌روزرسانی شد"
+ *                 question:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 55
+ *                     title:
+ *                       type: string
+ *                       example: "سوال ویرایش شده"
+ *       400:
+ *         description: اطلاعات ناقص یا نامعتبر
+ *       404:
+ *         description: سوال مورد نظر پیدا نشد
+ *       500:
+ *         description: خطای داخلی سرور
+ */
+router.put("/:id/questions/:questionId", authMiddleware, isAdmin, testController.updateQuestion);
+/**
+ * @swagger
+ * /api/v1/tests/{id}/questions/{questionId}:
+ *   delete:
+ *     summary: حذف سوال (فقط ادمین‌ها)
+ *     tags:
+ *       - Tests
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: شناسه تست
+ *         example: 123
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: شناسه سوال
+ *         example: 55
+ *     responses:
+ *       200:
+ *         description: سوال با موفقیت حذف شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "سوال با موفقیت حذف شد"
+ *       404:
+ *         description: سوال مورد نظر پیدا نشد
+ *       500:
+ *         description: خطای داخلی سرور
+ */
+router.delete("/:id/questions/:questionId", authMiddleware, isAdmin, testController.deleteQuestion);
 //router.patch("/rate/test/:id", testController.addrate)
 
 

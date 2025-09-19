@@ -589,6 +589,125 @@ router.put("/:id/questions/:questionId", authMiddleware, isAdmin, testController
  *         description: خطای داخلی سرور
  */
 router.delete("/:id/questions/:questionId", authMiddleware, isAdmin, testController.deleteQuestion);
+/**
+ * @swagger
+ * /api/v1/tests/{id}/submit:
+ *   post:
+ *     summary: ارسال پاسخ‌های آزمون (فقط کاربران لاگین‌شده)
+ *     tags:
+ *       - Tests
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: شناسه آزمون
+ *         example: 123
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - answers
+ *             properties:
+ *               answers:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["گزینه اول", "گزینه دوم", "گزینه سوم"]
+ *               userId:
+ *                 type: integer
+ *                 example: 456
+ *     responses:
+ *       200:
+ *         description: آزمون با موفقیت ثبت شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "آزمون با موفقیت ثبت شد"
+ *                 result:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 789
+ *                     score:
+ *                       type: integer
+ *                       example: 85
+ *                     correctAnswers:
+ *                       type: integer
+ *                       example: 17
+ *                     totalQuestions:
+ *                       type: integer
+ *                       example: 20
+ *                     completedAt:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: اطلاعات ناقص یا نامعتبر
+ *       404:
+ *         description: آزمون مورد نظر پیدا نشد
+ *       500:
+ *         description: خطای داخلی سرور
+ */
+router.post("/:id/submit", authMiddleware, testController.submitExam);
+/**
+ * @swagger
+ * /api/v1/tests/{id}/result:
+ *   get:
+ *     summary: دریافت نتیجه آزمون کاربر (فقط کاربران لاگین‌شده)
+ *     tags:
+ *       - Tests
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: شناسه آزمون
+ *         example: 123
+ *     responses:
+ *       200:
+ *         description: نتیجه آزمون
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 result:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 789
+ *                     score:
+ *                       type: integer
+ *                       example: 85
+ *                     answers:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["گزینه اول", "گزینه دوم", "گزینه سوم"]
+ *                     completedAt:
+ *                       type: string
+ *                       format: date-time
+ *       404:
+ *         description: نتیجه آزمون یافت نشد
+ *       500:
+ *         description: خطای داخلی سرور
+ */
+router.get("/:id/result", authMiddleware, testController.getExamResult);
 //router.patch("/rate/test/:id", testController.addrate)
 
 

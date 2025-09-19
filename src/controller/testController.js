@@ -344,3 +344,101 @@ exports.deleteQuestion = async (req, res) => {
     return res.status(500).json({ message: 'خطا در سرور برای حذف سوال' });
   }
 };
+
+exports.submitExam = async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const { answers, userId } = req.body;
+
+    // اعتبارسنجی ورودی
+    if (!answers || !Array.isArray(answers)) {
+      return res.status(400).json({ error: 'پاسخ‌ها باید آرایه باشند' });
+    }
+
+    // دریافت سوالات آزمون
+    const questions = await question.findAll({
+      where: { examId: testId },
+      include: [
+        {
+          model: Items,
+          as: 'Items'
+        }
+      ]
+    });
+
+    if (questions.length === 0) {
+      return res.status(404).json({ error: 'آزمون مورد نظر پیدا نشد' });
+    }
+
+    // محاسبه نمره
+    let correctAnswers = 0;
+    questions.forEach((q, index) => {
+      const correctIndex = q.Items?.[0]?.correctIndex || 0;
+      const userAnswer = answers[index];
+      const correctAnswer = q.Items?.[0]?.items?.[correctIndex];
+      
+      if (userAnswer === correctAnswer) {
+        correctAnswers++;
+      }
+    });
+
+    const score = Math.round((correctAnswers / questions.length) * 100);
+
+    // ذخیره نتیجه آزمون
+    const examResult = await userTest.create({
+      examId: testId,
+      userId: userId || req.user?.id,
+      answers: JSON.stringify(answers),
+      score: score,
+      completedAt: new Date()
+    });
+
+    res.status(200).json({
+      message: "آزمون با موفقیت ثبت شد",
+      result: {
+        id: examResult.id,
+        score: score,
+        correctAnswers: correctAnswers,
+        totalQuestions: questions.length,
+        completedAt: examResult.completedAt
+      }
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای ثبت آزمون:', error);
+    return res.status(500).json({ message: 'خطا در سرور برای ثبت آزمون' });
+  }
+};
+
+exports.getExamResult = async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const userId = req.user?.id;
+
+    // دریافت نتیجه آزمون کاربر
+    const examResult = await userTest.findOne({
+      where: { 
+        examId: testId,
+        userId: userId 
+      },
+      order: [['completedAt', 'DESC']]
+    });
+
+    if (!examResult) {
+      return res.status(404).json({ error: 'نتیجه آزمون یافت نشد' });
+    }
+
+    res.status(200).json({
+      result: {
+        id: examResult.id,
+        score: examResult.score,
+        answers: JSON.parse(examResult.answers),
+        completedAt: examResult.completedAt
+      }
+    });
+
+  } catch (error) {
+    console.error('خطا در سرور برای دریافت نتیجه آزمون:', error);
+    return res.status(500).json({ message: 'خطا در سرور برای دریافت نتیجه آزمون' });
+  }
+};

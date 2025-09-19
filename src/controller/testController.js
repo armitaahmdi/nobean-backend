@@ -351,6 +351,8 @@ exports.submitExam = async (req, res) => {
     const { answers } = req.body;
     const userId = req.user?.id;
 
+    console.log('Submit exam request:', { testId, answers, userId });
+
     // اعتبارسنجی ورودی
     if (!answers || !Array.isArray(answers)) {
       return res.status(400).json({ error: 'پاسخ‌ها باید آرایه باشند' });
@@ -397,29 +399,43 @@ exports.submitExam = async (req, res) => {
 
     const score = Math.round((correctAnswers / questions.length) * 100);
 
-    // ذخیره نتیجه آزمون
-    const examResult = await userTest.create({
-      examId: testId,
-      userId: userId,
-      answers: JSON.stringify(processedAnswers),
-      score: score,
-      completedAt: new Date()
-    });
+    console.log('Calculated score:', { score, correctAnswers, totalQuestions: questions.length });
 
-    res.status(200).json({
-      message: "آزمون با موفقیت ثبت شد",
-      result: {
-        id: examResult.id,
-        score: score,
-        correctAnswers: correctAnswers,
-        totalQuestions: questions.length,
-        completedAt: examResult.completedAt
-      }
-    });
+    // ذخیره نتیجه آزمون - ساده شده
+    try {
+      const examResult = await userTest.create({
+        examId: parseInt(testId),
+        userId: parseInt(userId),
+        answers: JSON.stringify(processedAnswers),
+        score: score
+      });
+
+      console.log('Exam result created:', examResult);
+
+      res.status(200).json({
+        message: "آزمون با موفقیت ثبت شد",
+        result: {
+          id: examResult.id,
+          score: score,
+          correctAnswers: correctAnswers,
+          totalQuestions: questions.length,
+          completedAt: new Date()
+        }
+      });
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      res.status(500).json({ 
+        message: 'خطا در ذخیره نتیجه آزمون',
+        error: dbError.message 
+      });
+    }
 
   } catch (error) {
     console.error('خطا در سرور برای ثبت آزمون:', error);
-    return res.status(500).json({ message: 'خطا در سرور برای ثبت آزمون' });
+    return res.status(500).json({ 
+      message: 'خطا در سرور برای ثبت آزمون',
+      error: error.message 
+    });
   }
 };
 
@@ -428,18 +444,22 @@ exports.getExamResult = async (req, res) => {
     const { testId } = req.params;
     const userId = req.user?.id;
 
+    console.log('Get exam result request:', { testId, userId });
+
     // دریافت نتیجه آزمون کاربر
     const examResult = await userTest.findOne({
       where: { 
-        examId: testId,
-        userId: userId 
+        examId: parseInt(testId),
+        userId: parseInt(userId) 
       },
-      order: [['completedAt', 'DESC']]
+      order: [['id', 'DESC']]
     });
 
     if (!examResult) {
       return res.status(404).json({ error: 'نتیجه آزمون یافت نشد' });
     }
+
+    console.log('Found exam result:', examResult);
 
     // محاسبه تعداد پاسخ‌های صحیح
     const answers = JSON.parse(examResult.answers);
@@ -452,13 +472,16 @@ exports.getExamResult = async (req, res) => {
         correctAnswers: correctAnswers,
         totalQuestions: answers.length,
         answers: answers,
-        completedAt: examResult.completedAt
+        completedAt: examResult.completedAt || new Date()
       }
     });
 
   } catch (error) {
     console.error('خطا در سرور برای دریافت نتیجه آزمون:', error);
-    return res.status(500).json({ message: 'خطا در سرور برای دریافت نتیجه آزمون' });
+    return res.status(500).json({ 
+      message: 'خطا در سرور برای دریافت نتیجه آزمون',
+      error: error.message 
+    });
   }
 };
 

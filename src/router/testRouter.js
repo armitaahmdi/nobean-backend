@@ -709,9 +709,6 @@ router.post("/:id/submit", authMiddleware, testController.submitExam);
  */
 router.get("/:id/result", authMiddleware, testController.getExamResult);
 
-// Admin routes for exam results
-router.get("/:id/results", authMiddleware, isAdmin, testController.getExamResults);
-router.get("/:id/statistics", authMiddleware, isAdmin, testController.getExamStatistics);
 
 //router.patch("/rate/test/:id", testController.addrate)
 

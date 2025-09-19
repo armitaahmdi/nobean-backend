@@ -8,53 +8,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     examId: {
       type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'tests',
-        key: 'id'
-      }
+      allowNull: false
     },
     userId: {
       type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
+      allowNull: false
     },
     answers: {
       type: DataTypes.TEXT,
-      allowNull: false,
-      comment: 'JSON string containing user answers and correct answers'
+      allowNull: false
     },
     score: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      comment: 'Score percentage (0-100)'
+      allowNull: false
     },
     completedAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW
-    },
-    timeSpent: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      comment: 'Time spent in seconds'
-    },
-    status: {
-      type: DataTypes.ENUM('completed', 'incomplete', 'abandoned'),
-      defaultValue: 'completed'
     }
   }, {
     tableName: 'user_tests',
-    timestamps: true,
-    indexes: [
-      {
-        unique: true,
-        fields: ['examId', 'userId']
-      }
-    ]
+    timestamps: true
   });
 
   return UserTest;

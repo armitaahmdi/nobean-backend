@@ -43,7 +43,7 @@ const isAdmin = (req, res, next) => {
             return next();
         }
 
-        if (user.role !== "admin") {
+        if (user.role !== "admin" && user.role !== "superadmin") {
             console.log("User role:", user.role);
             return res.status(401).json({ message: "شما اجازه ندارید" });
         }

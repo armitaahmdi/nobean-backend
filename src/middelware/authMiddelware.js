@@ -42,6 +42,7 @@ module.exports = async (req, res, next) => {
 
     next();
   } catch (err) {
+    console.error("Auth middleware error:", err);
     return res.status(403).json({ message: "توکن نامعتبر است" });
   }
 };

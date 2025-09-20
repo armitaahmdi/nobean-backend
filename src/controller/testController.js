@@ -294,6 +294,11 @@ exports.deleteQuestion = async (req, res) => {
 
 // Submit exam - ارسال آزمون
 exports.submitExam = async (req, res) => {
+  console.log('=== SUBMIT EXAM CALLED ===');
+  console.log('Request params:', req.params);
+  console.log('Request body:', req.body);
+  console.log('Request user:', req.user);
+  
   try {
     const { id: testId } = req.params;
     const { answers, timeSpent } = req.body;
@@ -361,8 +366,14 @@ exports.submitExam = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("خطا در ارسال آزمون:", error);
-    res.status(500).json({ message: "خطا در ارسال آزمون" });
+    console.error("=== ERROR IN SUBMIT EXAM ===");
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    console.error("Full error:", error);
+    res.status(500).json({ 
+      message: "خطا در ارسال آزمون",
+      error: error.message 
+    });
   }
 };
 

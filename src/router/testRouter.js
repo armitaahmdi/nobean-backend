@@ -659,6 +659,14 @@ router.delete("/:id/questions/:questionId", authMiddleware, isAdmin, testControl
  *       500:
  *         description: خطای داخلی سرور
  */
+// Test route بدون احراز هویت
+router.post("/:id/submit-test", (req, res) => {
+  console.log('=== TEST ROUTE CALLED ===');
+  console.log('Request params:', req.params);
+  console.log('Request body:', req.body);
+  res.json({ message: 'Test route working', params: req.params, body: req.body });
+});
+
 router.post("/:id/submit", authMiddleware, testController.submitExam);
 /**
  * @swagger

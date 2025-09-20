@@ -78,7 +78,7 @@ app.use("/api/v1", uploadRouter)
 sequelize.authenticate()
    .then(() => {
     console.log( ' connection success');
-      return sequelize.sync({ alter: true });
+      return sequelize.sync({ force: false });
   })
   .then(() => {
     console.log('table compared');

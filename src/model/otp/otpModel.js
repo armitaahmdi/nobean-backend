@@ -1,11 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
   const Otp = sequelize.define("Otp", {
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true
+    },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     code: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     expiresAt: {
@@ -14,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     tableName: "otps",
-    timestamps: false,
+    timestamps: true,
   });
 
   return Otp;

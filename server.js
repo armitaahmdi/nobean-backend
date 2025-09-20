@@ -24,6 +24,8 @@ const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر �
 
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use(cors(corsOptions));
+
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
@@ -54,7 +56,7 @@ const corsOptions = {
   credentials: true
 }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(sessions({
   secret:"sldkflsdfskdjflksjdfk",

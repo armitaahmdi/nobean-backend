@@ -48,7 +48,7 @@ module.exports.verifyOtp = async (req, res) => {
 
   const otpEntry = await Otp.findOne({ where: { phone } });
   if (!otpEntry) return res.status(401).json({ message: "کد اشتباه است." });
-  if (otpEntry.code !== parseInt(code)) return res.status(401).json({ message: "کد اشتباه است." });
+  if (otpEntry.code !== code.toString()) return res.status(401).json({ message: "کد اشتباه است." });
   if (otpEntry.expiresAt < new Date()) return res.status(401).json({ message: "کد منقضی شده است." });
 
   // پاک کردن OTP بعد از وریفای موفق

@@ -73,15 +73,7 @@ exports.getTest = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const testData = await test.findByPk(id, {
-      include: [
-        {
-          model: db.Category,
-          through: db.Categorytest,
-          as: 'categrys'
-        }
-      ]
-    });
+    const testData = await test.findByPk(id);
 
     if (!testData) {
       return res.status(404).json({ error: "تست مورد نظر پیدا نشد." });

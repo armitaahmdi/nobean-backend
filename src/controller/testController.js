@@ -325,8 +325,8 @@ exports.submitExam = async (req, res) => {
     const totalQuestions = questions.length;
 
     questions.forEach(q => {
-      const userAnswer = answers[q.id];
-      const correctAnswer = q.Items?.[0]?.correctIndex;
+      const userAnswer = answers[q.id] || answers[String(q.id)];
+      const correctAnswer = q.Items && q.Items.length > 0 ? q.Items[0].correctIndex : null;
       
       if (userAnswer === correctAnswer) {
         correctAnswers++;
@@ -336,9 +336,9 @@ exports.submitExam = async (req, res) => {
     const score = Math.round((correctAnswers / totalQuestions) * 100);
 
     // ذخیره یا به‌روزرسانی نتیجه آزمون
-    const [userTestResult, created] = await userTest.upsert({
+    const userTestResult = await userTest.upsert({
       userId: userId,
-      testId: testId,
+      examId: testId,
       answers: JSON.stringify(answers),
       score: score,
       correctAnswers: correctAnswers,
@@ -346,11 +346,6 @@ exports.submitExam = async (req, res) => {
       timeSpent: timeSpent || 0,
       status: 'completed',
       completedAt: new Date()
-    }, {
-      where: {
-        userId: userId,
-        testId: testId
-      }
     });
 
     console.log('Exam submitted successfully:', { score, correctAnswers, totalQuestions });
@@ -361,7 +356,7 @@ exports.submitExam = async (req, res) => {
         score: score,
         correctAnswers: correctAnswers,
         totalQuestions: totalQuestions,
-        completedAt: userTestResult.completedAt
+        completedAt: new Date()
       }
     });
 

@@ -1,26 +1,22 @@
-// models/userTest.js
 module.exports = (sequelize, DataTypes) => {
   const UserTest = sequelize.define('UserTest', {
-    id:{
-          type: DataTypes.BIGINT,
-             primaryKey:true,
-          autoIncrement: true
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true
     },
     role: {
-      type: DataTypes.STRING, // مثلاً "participant" یا "observer"
-      defaultValue: 'participant',
-      
+      type: DataTypes.ENUM('participant', 'observer'),
+      defaultValue: 'participant'
     },
     examId: {
-        type:DataTypes.BIGINT,
-          primaryKey:false
+      type: DataTypes.BIGINT,
+      allowNull: false
     },
     userId: {
-        type:DataTypes.BIGINT,
-        primaryKey:false
-
+      type: DataTypes.BIGINT,
+      allowNull: false
     },
-    // فیلدهای جدید برای ذخیره نتیجه آزمون
     answers: {
       type: DataTypes.JSON,
       allowNull: true,
@@ -48,17 +44,23 @@ module.exports = (sequelize, DataTypes) => {
       comment: 'زمان صرف شده به ثانیه'
     },
     status: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: DataTypes.ENUM('in_progress', 'completed'),
+      allowNull: false,
       defaultValue: 'in_progress',
-      comment: 'وضعیت آزمون: in_progress, completed'
+      comment: 'وضعیت آزمون'
     },
     completedAt: {
       type: DataTypes.DATE,
       allowNull: true,
       comment: 'زمان تکمیل آزمون'
     }
-
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['userId', 'examId']
+      }
+    ]
   });
 
   return UserTest;

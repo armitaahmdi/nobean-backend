@@ -12,6 +12,16 @@ module.exports = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'توضیح کوتاه درباره سوال'
+    },
+    number: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: 'شماره سوال در آزمون'
     }
   });
 

@@ -2,13 +2,14 @@ const express = require("express")
 const db = require('../model/index');
 const { where } = require("sequelize");
 
-const test = db.test
+const test = db.Exam
 const question = db.Question
-const categoryTest = db.Categorytest
+const categoryTest = db.CategoryTest
 const Items = db.Item
-const userTest = db.userTest
+const userTest = db.UserTest
 const Comment = db.Comment
 const User = db.User;
+const ExamResult = db.ExamResult;
 
 
 exports.getAll = async (req, res) => {
@@ -370,7 +371,7 @@ exports.getExamResult = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email'] // فیلدهای کاربر که میخوای برگرده
+          attributes: ['id', 'firstName', 'lastName', 'email'] // فیلدهای کاربر که میخوای برگرده
         }
       ]
     });

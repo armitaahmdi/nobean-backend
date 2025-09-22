@@ -9,7 +9,7 @@ db.sequelize = sequelize;
 
 // مدل‌ها
 db.User = require('./userModel')(sequelize, DataTypes);
-db.Exam = require('./tests/examModel')(sequelize, DataTypes);
+db.Exam = require('./tests/testModel')(sequelize, DataTypes);
 db.Question = require('./tests/questionModel')(sequelize, DataTypes);
 db.Item = require('./tests/itemsQuestionModel')(sequelize, DataTypes);
 db.UserTest = require('./tests/userTestModel')(sequelize, DataTypes);
@@ -28,6 +28,8 @@ db.CourseUser = require('./courses/courseUserModel')(sequelize, DataTypes);
 db.CategoryCourse = require('./courses/categoryCourseModel')(sequelize, DataTypes);
 db.Podcast = require('./podcasts/podcastModel')(sequelize, DataTypes);
 db.Otp = require('./otp/otpModel')(sequelize, DataTypes);
+db.ExamResult = require('./tests/examResultModel')(sequelize, DataTypes);
+db.Webinar = require('./WebinarModel')(sequelize, DataTypes);
 
 // روابط آزمون و سوالات
 db.Exam.hasMany(db.Question, { foreignKey: 'examId', onDelete: 'CASCADE' });
@@ -44,6 +46,14 @@ db.UserTest.belongsTo(db.User, { foreignKey: 'userId' });
 // آزمون ↔ نتایج آزمون
 db.Exam.hasMany(db.UserTest, { foreignKey: 'examId', onDelete: 'CASCADE' });
 db.UserTest.belongsTo(db.Exam, { foreignKey: 'examId' });
+
+// آزمون ↔ نتایج آزمون (ExamResult)
+db.Exam.hasMany(db.ExamResult, { foreignKey: 'examId', onDelete: 'CASCADE' });
+db.ExamResult.belongsTo(db.Exam, { foreignKey: 'examId' });
+
+// کاربر ↔ نتایج آزمون (ExamResult)
+db.User.hasMany(db.ExamResult, { foreignKey: 'userId', onDelete: 'CASCADE' });
+db.ExamResult.belongsTo(db.User, { foreignKey: 'userId' });
 
 // Category ↔ Exam
 db.Category.belongsToMany(db.Exam, { through: db.CategoryTest, foreignKey: 'categoryId' });

@@ -1,6 +1,6 @@
 
 module.exports =(sequelize, DataTypes) => {
-const  webinar = sequelize.defind("webinar",{
+const  webinar = sequelize.define("webinar",{
     id:{
         type:DataTypes.BIGINT,
         primaryKey:true

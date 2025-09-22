@@ -298,6 +298,18 @@ exports.submitExam = async (req, res) => {
   try {
     const { id: examId } = req.params; // examId از URL
     const { answers, timeSpent } = req.body; // answers: { questionId: selectedIndex }
+    // در صورتی که answers به صورت رشته JSON ارسال شده باشد، پارس کن
+    let normalizedAnswers = answers;
+    if (typeof normalizedAnswers === 'string') {
+      try {
+        normalizedAnswers = JSON.parse(normalizedAnswers);
+      } catch (e) {
+        return res.status(400).json({ error: 'answers must be a valid JSON object' });
+      }
+    }
+    if (!normalizedAnswers || typeof normalizedAnswers !== 'object') {
+      return res.status(400).json({ error: 'answers must be an object' });
+    }
     const userId = req.user.id; // از JWT middleware
 
     // پیدا کردن آزمون همراه با سوال‌ها و گزینه‌ها
@@ -316,7 +328,7 @@ exports.submitExam = async (req, res) => {
     let correctAnswersCount = 0;
 
     questions.forEach(q => {
-      const userAnswer = answers[q.id];
+      const userAnswer = normalizedAnswers[q.id];
       const correctIndex = q.Items && q.Items.length > 0 ? q.Items[0].correctIndex : null;
       if (userAnswer === correctIndex) correctAnswersCount++;
     });

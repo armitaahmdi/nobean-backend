@@ -319,7 +319,7 @@ exports.submitExam = async (req, res) => {
 
     if (!exam) return res.status(404).json({ error: 'آزمون پیدا نشد' });
 
-    const questions = exam.Questions;
+    const questions = exam.questions || exam.Questions;
 
     if (!questions || questions.length === 0)
       return res.status(400).json({ error: 'این آزمون سوالی ندارد' });

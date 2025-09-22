@@ -55,9 +55,17 @@ db.ExamResult.belongsTo(db.Exam, { foreignKey: 'examId' });
 db.User.hasMany(db.ExamResult, { foreignKey: 'userId', onDelete: 'CASCADE' });
 db.ExamResult.belongsTo(db.User, { foreignKey: 'userId' });
 
-// Category ↔ Exam
-db.Category.belongsToMany(db.Exam, { through: db.CategoryTest, foreignKey: 'categoryId' });
-db.Exam.belongsToMany(db.Category, { through: db.CategoryTest, foreignKey: 'examId' });
+// Category ↔ Exam (through category_test with keys categoryId/testId)
+db.Category.belongsToMany(db.Exam, {
+  through: db.CategoryTest,
+  foreignKey: 'categoryId',
+  otherKey: 'testId'
+});
+db.Exam.belongsToMany(db.Category, {
+  through: db.CategoryTest,
+  foreignKey: 'testId',
+  otherKey: 'categoryId'
+});
 
 // Category ↔ Product
 db.Product.belongsToMany(db.Category, { through: db.CategoryProduct, foreignKey: 'productId', otherKey: 'categoryId', as: 'categories' });

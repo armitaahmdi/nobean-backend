@@ -297,23 +297,8 @@ exports.deleteQuestion = async (req, res) => {
 exports.submitExam = async (req, res) => {
   try {
     const { id: examId } = req.params; // examId از URL
+    const { answers, timeSpent } = req.body; // answers: { questionId: selectedIndex }
     const userId = req.user.id; // از JWT middleware
-
-    // بدنه می‌تواند به صورت string یا object برسد؛ هر دو را پشتیبانی کن
-    let payload = req.body;
-    if (typeof payload === 'string') {
-      try {
-        payload = JSON.parse(payload);
-      } catch (e) {
-        return res.status(400).json({ error: 'Body must be valid JSON' });
-      }
-    }
-    const { answers, timeSpent } = payload; // answers: { questionId: selectedIndex }
-
-    // اعتبارسنجی اولیه ورودی
-    if (!answers || typeof answers !== 'object') {
-      return res.status(400).json({ error: 'answers must be an object' });
-    }
 
     // پیدا کردن آزمون همراه با سوال‌ها و گزینه‌ها
     const exam = await test.findByPk(examId, {
@@ -324,13 +309,8 @@ exports.submitExam = async (req, res) => {
 
     const questions = exam.Questions;
 
-    if (!questions || questions.length === 0) {
+    if (!questions || questions.length === 0)
       return res.status(400).json({ error: 'این آزمون سوالی ندارد' });
-    }
-
-    // لاگ‌های کمکی برای اشکال‌زدایی در صورت نیاز
-    // console.log('submitExam debug -> answers keys:', Object.keys(answers));
-    // console.log('submitExam debug -> questions count:', questions.length);
 
     // محاسبه تعداد پاسخ صحیح
     let correctAnswersCount = 0;

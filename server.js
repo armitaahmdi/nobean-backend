@@ -1,92 +1,184 @@
+// require('dotenv').config();
+// const express = require('express');
+// const app = express();
+// const sequelize = require('./config/db');
+// const  sessions = require("express-session")
+// const cors = require('cors');
+// const helmet = require("helmet")
+// require("./src/utils/cronjobs/createOldCart");
+
+// app.get('/' , (req , res ) => {
+//   res.send( "api is running")
+// })
+
+// const authRouter = require("./src/router/auth")
+// const testRouter = require("./src/router/testRouter")
+// const productRouter = require("./src/router/productRouter")
+// const  podcastRouter  = require("./src/router/podcastRouter")
+// const cartRouter= require("./src/router/cartRouter")
+// const commentRouter = require("./src/router/commentRouter")
+// const categoryRouter = require("./src/router/categoryRouter")
+// const uploadRouter = require("./src/router/uploadRouter")
+// const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر درست بده
+
+
+// app.use(express.json({ limit: '100mb' }));
+// app.use(express.urlencoded({ limit: '100mb', extended: true }));
+// // app.use(cors(corsOptions));
+
+// app.use(helmet({
+//   crossOriginResourcePolicy: { policy: "cross-origin" }
+// }));
+
+// // Serve static files from uploads directory
+// app.use('/uploads', express.static('uploads'));
+
+// const corsOptions = {
+//   origin: function(origin, callback){
+//     if(!origin) return callback(null, true); // مثلا Postman یا curl
+//      const allowedOrigins = [
+//       'https://36b57023baaf.ngrok-free.app',
+//       'http://localhost:8888',
+//       'http://localhost:5173',
+//       'https://nobean.ir',
+//       'https://www.nobean.ir',
+//       'https://api.nobean.ir'
+//     ];
+    
+//     if(allowedOrigins.includes(origin)){
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-auth-token'],
+//   credentials: true
+// }
+
+// app.use(cors(corsOptions));
+
+// app.use(sessions({
+//   secret:"sldkflsdfskdjflksjdfk",
+//   resave:false,
+//    saveUninitialized:true,
+//    cookie: { maxAge: 5 * 60 * 1000 }
+// }))
+
+
+
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use("/api/v1/tests", testRouter)
+// app.use("/api/v1/users", authRouter)
+// app.use("/api/v1/podcasts" , podcastRouter) 
+// app.use("/api/v1/products" , productRouter)
+// app.use("/api/v1/carts", cartRouter)
+// app.use("/api/v1/comments" , commentRouter)
+// app.use("/api/v1/categories", categoryRouter)
+// app.use("/api/v1", uploadRouter)
+
+// sequelize.authenticate()
+//    .then(() => {
+//     console.log( ' connection success');
+//       return sequelize.sync({ alter: true });
+//   })
+//   .then(() => {
+//     console.log('table compared');
+//   })
+//   .catch(err => console.error('   problem in connect to data base ', err));
+
+// app.listen(8888, () => {
+//   console.log('connect to port 8888');
+// })
+
 require('dotenv').config();
 const express = require('express');
-const app = express();
-const sequelize = require('./config/db');
-const  sessions = require("express-session")
+const sessions = require('express-session');
 const cors = require('cors');
-const helmet = require("helmet")
+const helmet = require('helmet');
+
+const sequelize = require('./config/db');
 require("./src/utils/cronjobs/createOldCart");
 
-app.get('/' , (req , res ) => {
-  res.send( "api is running")
-})
+const app = express();
 
-const authRouter = require("./src/router/auth")
-const testRouter = require("./src/router/testRouter")
-const productRouter = require("./src/router/productRouter")
-const  podcastRouter  = require("./src/router/podcastRouter")
-const cartRouter= require("./src/router/cartRouter")
-const commentRouter = require("./src/router/commentRouter")
-const categoryRouter = require("./src/router/categoryRouter")
-const uploadRouter = require("./src/router/uploadRouter")
-const { swaggerUi, swaggerSpec } = require('./src/utils/swagger'); // مسیر درست بده
+// Routers
+const authRouter = require("./src/router/auth");
+const testRouter = require("./src/router/testRouter");
+const productRouter = require("./src/router/productRouter");
+const podcastRouter = require("./src/router/podcastRouter");
+const cartRouter = require("./src/router/cartRouter");
+const commentRouter = require("./src/router/commentRouter");
+const categoryRouter = require("./src/router/categoryRouter");
+const uploadRouter = require("./src/router/uploadRouter");
 
+// Swagger
+const { swaggerUi, swaggerSpec } = require('./src/utils/swagger');
 
+// Middlewares
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
-// app.use(cors(corsOptions));
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-// Serve static files from uploads directory
+// Serve static uploads
 app.use('/uploads', express.static('uploads'));
+
+// CORS
+const allowedOrigins = [
+  'https://36b57023baaf.ngrok-free.app',
+  'http://localhost:8888',
+  'http://localhost:5173',
+  'https://nobean.ir',
+  'https://www.nobean.ir',
+  'https://api.nobean.ir'
+];
 
 const corsOptions = {
   origin: function(origin, callback){
-    if(!origin) return callback(null, true); // مثلا Postman یا curl
-     const allowedOrigins = [
-      'https://36b57023baaf.ngrok-free.app',
-      'http://localhost:8888',
-      'http://localhost:5173',
-      'https://nobean.ir',
-      'https://www.nobean.ir',
-      'https://api.nobean.ir'
-    ];
-    
-    if(allowedOrigins.includes(origin)){
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+    if(!origin) return callback(null, true); // Postman, curl
+    if(allowedOrigins.includes(origin)) callback(null, true);
+    else callback(new Error('Not allowed by CORS'));
   },
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-auth-token'],
   credentials: true
-}
+};
 
 app.use(cors(corsOptions));
 
+// Session
 app.use(sessions({
-  secret:"sldkflsdfskdjflksjdfk",
-  resave:false,
-   saveUninitialized:true,
-   cookie: { maxAge: 5 * 60 * 1000 }
-}))
+  secret: "sldkflsdfskdjflksjdfk",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 5 * 60 * 1000 } // 5 دقیقه
+}));
 
-
-
+// Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/v1/tests", testRouter)
-app.use("/api/v1/users", authRouter)
-app.use("/api/v1/podcasts" , podcastRouter) 
-app.use("/api/v1/products" , productRouter)
-app.use("/api/v1/carts", cartRouter)
-app.use("/api/v1/comments" , commentRouter)
-app.use("/api/v1/categories", categoryRouter)
-app.use("/api/v1", uploadRouter)
+app.use("/api/v1/tests", testRouter);
+app.use("/api/v1/users", authRouter);
+app.use("/api/v1/podcasts", podcastRouter);
+app.use("/api/v1/products", productRouter);
+app.use("/api/v1/carts", cartRouter);
+app.use("/api/v1/comments", commentRouter);
+app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1", uploadRouter);
 
+// Health check
+app.get('/', (req, res) => res.send("API is running"));
+
+// Database connection & sync, then start server
 sequelize.authenticate()
-   .then(() => {
-    console.log( ' connection success');
-      return sequelize.sync({ alter: true });
+  .then(() => {
+    console.log('✅ Database connection success');
+    return sequelize.sync({ alter: true });
   })
   .then(() => {
-    console.log('table compared');
+    console.log('✅ Database synced with alter:true');
+    app.listen(8888, () => console.log('🚀 Server running on port 8888'));
   })
-  .catch(err => console.error('   problem in connect to data base ', err));
-
-app.listen(8888, () => {
-  console.log('connect to port 8888');
-})
+  .catch(err => console.error('❌ Problem connecting to database:', err));

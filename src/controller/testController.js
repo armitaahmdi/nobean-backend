@@ -430,7 +430,7 @@ exports.getExamResult = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'firstName', 'lastName', 'email'] // فیلدهای کاربر که میخوای برگرده
+          attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
         }
       ]
     });
@@ -442,7 +442,9 @@ exports.getExamResult = async (req, res) => {
     res.status(200).json({
       message: "نتیجه آزمون دریافت شد",
       result: {
-        user: userTestResult.User, // اطلاعات کاربر
+        user: userTestResult.User,
+        userName: `${userTestResult.User?.firstName || ''} ${userTestResult.User?.lastName || ''}`.trim(),
+        userPhone: userTestResult.User?.phone || '',
         score: userTestResult.score,
         correctAnswers: userTestResult.correctAnswers,
         totalQuestions: userTestResult.totalQuestions,

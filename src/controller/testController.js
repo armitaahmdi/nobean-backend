@@ -363,7 +363,8 @@ exports.submitExam = async (req, res) => {
 
     questions.forEach(q => {
       const userAnswer = normalizedAnswers[q.id];
-      const itemsObj = q.Items || null; // hasOne
+      // association: Question.hasMany(Item) as 'Items' → یک ردیف برای هر سوال
+      const itemsObj = q.Items && Array.isArray(q.Items) ? q.Items[0] : (q.Items || null);
       const weights = itemsObj && Array.isArray(itemsObj.weights) ? itemsObj.weights : [];
       if (weights.length > 0) {
         const maxW = Math.max(...weights);

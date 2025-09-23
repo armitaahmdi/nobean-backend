@@ -148,6 +148,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+// Handle preflight for all routes
+app.options('*', cors(corsOptions));
 
 // Session
 app.use(sessions({

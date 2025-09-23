@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON,  // یا DataTypes.TEXT هم میشه با stringify
       allowNull: false
     },
+    // وزن هر گزینه به صورت آرایه‌ای از ضرایب 1 تا 5، هم‌طول با items
+    weights: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      comment: 'آرایه ضرایب هر گزینه (1 تا 5) هم‌طول با items'
+    },
     correctIndex: {
       type: DataTypes.INTEGER,
       allowNull: false

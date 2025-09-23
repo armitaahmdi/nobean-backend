@@ -10,6 +10,7 @@ const userTest = db.UserTest
 const Comment = db.Comment
 const User = db.User;
 const ExamResult = db.ExamResult;
+const { Op, fn, col, literal } = require('sequelize');
 
 
 exports.getAll = async (req, res) => {
@@ -123,7 +124,7 @@ exports.deleteTest = async (req, res) => {
 exports.createTestQuestion = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, items, correctIndex } = req.body;
+    const { title, items, correctIndex, weights } = req.body;
 
     // اعتبارسنجی ورودی
     if (!title || !items || !Array.isArray(items) || correctIndex === undefined) {
@@ -132,6 +133,20 @@ exports.createTestQuestion = async (req, res) => {
 
     if (correctIndex < 0 || correctIndex >= items.length) {
       return res.status(400).json({ error: "اندیس پاسخ صحیح نامعتبر است" });
+    }
+
+    // اعتبارسنجی weights در صورت ارسال
+    let normalizedWeights = null;
+    if (weights !== undefined) {
+      if (!Array.isArray(weights) || weights.length !== items.length) {
+        return res.status(400).json({ error: "weights باید آرایه‌ای هم‌طول items باشد" });
+      }
+      // محدود به 1..5 و اعداد صحیح
+      normalizedWeights = weights.map(w => {
+        const v = parseInt(w, 10);
+        if (isNaN(v) || v < 1 || v > 5) return 1;
+        return v;
+      });
     }
 
     // ایجاد سوال
@@ -144,7 +159,8 @@ exports.createTestQuestion = async (req, res) => {
     const newItems = await Items.create({
       questionId: newQuestion.id,
       items: items,
-      correctIndex: correctIndex
+      correctIndex: correctIndex,
+      weights: normalizedWeights
     });
 
     res.status(200).json({
@@ -157,7 +173,8 @@ exports.createTestQuestion = async (req, res) => {
       options: {
         questionId: newItems.questionId,
         items: newItems.items,
-        correctIndex: newItems.correctIndex
+        correctIndex: newItems.correctIndex,
+        weights: newItems.weights
       }
     });
 
@@ -191,7 +208,7 @@ exports.showQuestion = async (req, res) => {
 exports.updateQuestion = async (req, res) => {
   try {
     const { id, questionId } = req.params;
-    const { title, items, correctIndex } = req.body;
+    const { title, items, correctIndex, weights } = req.body;
 
     // اعتبارسنجی ورودی
     if (!title || !items || !Array.isArray(items) || correctIndex === undefined) {
@@ -200,6 +217,19 @@ exports.updateQuestion = async (req, res) => {
 
     if (correctIndex < 0 || correctIndex >= items.length) {
       return res.status(400).json({ error: "اندیس پاسخ صحیح نامعتبر است" });
+    }
+
+    // اعتبارسنجی weights در صورت ارسال
+    let normalizedWeights = null;
+    if (weights !== undefined) {
+      if (!Array.isArray(weights) || weights.length !== items.length) {
+        return res.status(400).json({ error: "weights باید آرایه‌ای هم‌طول items باشد" });
+      }
+      normalizedWeights = weights.map(w => {
+        const v = parseInt(w, 10);
+        if (isNaN(v) || v < 1 || v > 5) return 1;
+        return v;
+      });
     }
 
     // بررسی وجود سوال
@@ -225,13 +255,15 @@ exports.updateQuestion = async (req, res) => {
     if (existingItems) {
       await existingItems.update({
         items: items,
-        correctIndex: correctIndex
+        correctIndex: correctIndex,
+        weights: normalizedWeights !== null ? normalizedWeights : existingItems.weights
       });
     } else {
       await Items.create({
         questionId: questionId,
         items: items,
-        correctIndex: correctIndex
+        correctIndex: correctIndex,
+        weights: normalizedWeights
       });
     }
 
@@ -329,7 +361,8 @@ exports.submitExam = async (req, res) => {
 
     questions.forEach(q => {
       const userAnswer = normalizedAnswers[q.id];
-      const correctIndex = q.Items && q.Items.length > 0 ? q.Items[0].correctIndex : null;
+      // Items در مدل سوال به صورت hasOne ذخیره می‌شود، بنابراین یک آبجکت است نه آرایه
+      const correctIndex = q.Items ? q.Items.correctIndex : null;
       if (userAnswer === correctIndex) correctAnswersCount++;
     });
 
@@ -340,7 +373,8 @@ exports.submitExam = async (req, res) => {
     await userTest.upsert({
       userId,
       examId,
-      answers,
+      // ذخیره نسخه نرمالایز شده پاسخ‌ها
+      answers: normalizedAnswers,
       score,
       correctAnswers: correctAnswersCount,
       totalQuestions,
@@ -408,6 +442,107 @@ exports.getExamResult = async (req, res) => {
   } catch (error) {
     console.error("خطا در دریافت نتیجه آزمون:", error);
     res.status(500).json({ message: "خطا در دریافت نتیجه آزمون" });
+  }
+};
+
+// Admin: list results of an exam with user info and pagination
+exports.getExamResults = async (req, res) => {
+  try {
+    const { id: examId } = req.params;
+    const { page = 1, limit = 10, search = '' } = req.query;
+
+    const pageNumber = Math.max(parseInt(page) || 1, 1);
+    const pageSize = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const userInclude = {
+      model: User,
+      attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+    };
+
+    if (search && String(search).trim() !== '') {
+      const likePattern = `%${String(search).trim()}%`;
+      userInclude.where = {
+        [Op.or]: [
+          { firstName: { [Op.like]: likePattern } },
+          { lastName: { [Op.like]: likePattern } },
+          { email: { [Op.like]: likePattern } },
+          { phone: { [Op.like]: likePattern } }
+        ]
+      };
+      userInclude.required = true;
+    }
+
+    const { rows, count } = await userTest.findAndCountAll({
+      where: { examId },
+      include: [userInclude],
+      order: [['completedAt', 'DESC']],
+      limit: pageSize,
+      offset
+    });
+
+    const results = rows.map(r => ({
+      id: r.id,
+      userId: r.userId,
+      userName: r.User ? `${r.User.firstName || ''} ${r.User.lastName || ''}`.trim() : 'کاربر',
+      userEmail: r.User ? r.User.email : '',
+      userPhone: r.User ? r.User.phone : '',
+      score: r.score || 0,
+      correctAnswers: r.correctAnswers || 0,
+      totalQuestions: r.totalQuestions || 0,
+      completedAt: r.completedAt,
+      status: r.status,
+      timeSpent: r.timeSpent || 0
+    }));
+
+    const totalPages = Math.ceil(count / pageSize) || 1;
+
+    res.status(200).json({
+      results,
+      pagination: {
+        total: count,
+        page: pageNumber,
+        limit: pageSize,
+        totalPages,
+        hasNext: pageNumber < totalPages,
+        hasPrev: pageNumber > 1
+      }
+    });
+  } catch (error) {
+    console.error('خطا در دریافت نتایج آزمون:', error);
+    res.status(500).json({ message: 'خطا در دریافت نتایج آزمون' });
+  }
+};
+
+// Admin: statistics for an exam
+exports.getExamStatistics = async (req, res) => {
+  try {
+    const { id: examId } = req.params;
+
+    const totalAttempts = await userTest.count({ where: { examId } });
+    const completedAttempts = await userTest.count({ where: { examId, status: 'completed' } });
+
+    // average score
+    const avgRow = await userTest.findOne({
+      attributes: [[fn('AVG', col('score')), 'avgScore']],
+      where: { examId, status: 'completed' },
+      raw: true
+    });
+    const averageScore = avgRow && avgRow.avgScore ? Math.round(Number(avgRow.avgScore)) : 0;
+
+    const completionRate = totalAttempts === 0 ? 0 : Math.round((completedAttempts / totalAttempts) * 100);
+
+    res.status(200).json({
+      statistics: {
+        totalAttempts,
+        completedAttempts,
+        averageScore,
+        completionRate
+      }
+    });
+  } catch (error) {
+    console.error('خطا در دریافت آمار آزمون:', error);
+    res.status(500).json({ message: 'خطا در دریافت آمار آزمون' });
   }
 };
 

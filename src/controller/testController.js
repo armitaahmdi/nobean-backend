@@ -356,18 +356,26 @@ exports.submitExam = async (req, res) => {
     if (!questions || questions.length === 0)
       return res.status(400).json({ error: 'این آزمون سوالی ندارد' });
 
-    // محاسبه تعداد پاسخ صحیح
-    let correctAnswersCount = 0;
+    // محاسبه وزنی: جمع weight گزینه انتخاب‌شده و حداکثر ممکن
+    let weightedSum = 0;
+    let maxWeightedSum = 0;
+    const totalQuestions = questions.length;
 
     questions.forEach(q => {
       const userAnswer = normalizedAnswers[q.id];
-      // Items در مدل سوال به صورت hasOne ذخیره می‌شود، بنابراین یک آبجکت است نه آرایه
-      const correctIndex = q.Items ? q.Items.correctIndex : null;
-      if (userAnswer === correctIndex) correctAnswersCount++;
+      const itemsObj = q.Items || null; // hasOne
+      const weights = itemsObj && Array.isArray(itemsObj.weights) ? itemsObj.weights : [];
+      if (weights.length > 0) {
+        const maxW = Math.max(...weights);
+        maxWeightedSum += maxW;
+        if (typeof userAnswer === 'number' && userAnswer >= 0 && userAnswer < weights.length) {
+          weightedSum += weights[userAnswer] || 0;
+        }
+      }
     });
 
-    const totalQuestions = questions.length;
-    const score = Math.round((correctAnswersCount / totalQuestions) * 100);
+    // نمره در مقیاس 0..100 بر اساس نسبت وزنی
+    const score = maxWeightedSum > 0 ? Math.round((weightedSum / maxWeightedSum) * 100) : 0;
 
     // ذخیره یا بروزرسانی رکورد UserTest
     await userTest.upsert({
@@ -376,7 +384,9 @@ exports.submitExam = async (req, res) => {
       // ذخیره نسخه نرمالایز شده پاسخ‌ها
       answers: normalizedAnswers,
       score,
-      correctAnswers: correctAnswersCount,
+      weightedSum,
+      maxWeightedSum,
+      correctAnswers: null,
       totalQuestions,
       timeSpent: timeSpent || 0,
       status: 'completed',
@@ -392,6 +402,8 @@ exports.submitExam = async (req, res) => {
       message: 'آزمون با موفقیت ثبت شد',
       result: {
         score: userTestRecord.score,
+        weightedSum: userTestRecord.weightedSum,
+        maxWeightedSum: userTestRecord.maxWeightedSum,
         correctAnswers: userTestRecord.correctAnswers,
         totalQuestions: userTestRecord.totalQuestions,
         completedAt: userTestRecord.completedAt,
@@ -486,8 +498,10 @@ exports.getExamResults = async (req, res) => {
       userId: r.userId,
       userName: r.User ? `${r.User.firstName || ''} ${r.User.lastName || ''}`.trim() : 'کاربر',
       userEmail: r.User ? r.User.email : '',
-      userPhone: r.User ? r.User.phone : '',
+      userPhone: r.User ? (r.User.phone || r.User.mobile || '') : '',
       score: r.score || 0,
+      weightedSum: r.weightedSum || 0,
+      maxWeightedSum: r.maxWeightedSum || 0,
       correctAnswers: r.correctAnswers || 0,
       totalQuestions: r.totalQuestions || 0,
       completedAt: r.completedAt,
@@ -543,6 +557,81 @@ exports.getExamStatistics = async (req, res) => {
   } catch (error) {
     console.error('خطا در دریافت آمار آزمون:', error);
     res.status(500).json({ message: 'خطا در دریافت آمار آزمون' });
+  }
+};
+
+// Admin: list all exam attempts across exams with user and exam info
+exports.getAllExamAttempts = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const pageNumber = Math.max(parseInt(page) || 1, 1);
+    const pageSize = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const includes = [
+      {
+        model: User,
+        attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+      },
+      {
+        model: test,
+        attributes: ['id', 'title']
+      }
+    ];
+
+    const whereClause = {};
+    if (search && String(search).trim() !== '') {
+      const likePattern = `%${String(search).trim()}%`;
+      includes[0].where = {
+        [Op.or]: [
+          { firstName: { [Op.like]: likePattern } },
+          { lastName: { [Op.like]: likePattern } },
+          { phone: { [Op.like]: likePattern } },
+          { email: { [Op.like]: likePattern } }
+        ]
+      };
+      includes[0].required = true;
+    }
+
+    const { rows, count } = await userTest.findAndCountAll({
+      where: whereClause,
+      include: includes,
+      order: [['completedAt', 'DESC']],
+      limit: pageSize,
+      offset
+    });
+
+    const attempts = rows.map(r => ({
+      id: r.id,
+      userId: r.userId,
+      userName: r.User ? `${r.User.firstName || ''} ${r.User.lastName || ''}`.trim() : 'کاربر',
+      userPhone: r.User ? (r.User.phone || r.User.mobile || '') : '',
+      examId: r.examId,
+      examTitle: r.Exam ? r.Exam.title : '',
+      score: r.score || 0,
+      weightedSum: r.weightedSum || 0,
+      maxWeightedSum: r.maxWeightedSum || 0,
+      completedAt: r.completedAt,
+      status: r.status,
+      timeSpent: r.timeSpent || 0
+    }));
+
+    const totalPages = Math.ceil(count / pageSize) || 1;
+
+    res.status(200).json({
+      attempts,
+      pagination: {
+        total: count,
+        page: pageNumber,
+        limit: pageSize,
+        totalPages,
+        hasNext: pageNumber < totalPages,
+        hasPrev: pageNumber > 1
+      }
+    });
+  } catch (error) {
+    console.error('خطا در دریافت لیست همه تلاش‌های آزمون:', error);
+    res.status(500).json({ message: 'خطا در دریافت لیست تلاش‌های آزمون' });
   }
 };
 

@@ -27,6 +27,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       comment: 'نمره کاربر (0-100)'
     },
+    weightedSum: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+      comment: 'جمع ضرایب گزینه‌های انتخاب‌شده'
+    },
+    maxWeightedSum: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+      comment: 'حداکثر جمع ضرایب ممکن (جمع بیشینه وزن هر سوال)'
+    },
     correctAnswers: {
       type: DataTypes.INTEGER,
       allowNull: true,

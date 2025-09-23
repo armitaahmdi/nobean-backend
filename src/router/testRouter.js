@@ -719,6 +719,8 @@ router.get("/:id/result", authMiddleware, testController.getExamResult);
 // Admin endpoints
 router.get("/:id/results", authMiddleware, isAdmin, testController.getExamResults);
 router.get("/:id/statistics", authMiddleware, isAdmin, testController.getExamStatistics);
+// All attempts (admin)
+router.get("/attempts/all", authMiddleware, isAdmin, testController.getAllExamAttempts);
 
 
 //router.patch("/rate/test/:id", testController.addrate)

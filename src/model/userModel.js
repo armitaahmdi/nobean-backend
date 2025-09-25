@@ -68,11 +68,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = (models) => {
-    // User has many UserTest
-    User.hasMany(models.UserTest, {
-      foreignKey: 'userId',
-      as: 'UserTests'
-    });
+    // روابط در index.js تعریف شده‌اند
   };
 
   return User;

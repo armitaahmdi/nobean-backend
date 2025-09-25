@@ -40,12 +40,12 @@ db.Question.hasMany(db.Item, { foreignKey: 'questionId', onDelete: 'CASCADE', as
 db.Item.belongsTo(db.Question, { foreignKey: 'questionId', as: 'question' });
 
 // کاربر ↔ نتایج آزمون
-db.User.hasMany(db.UserTest, { foreignKey: 'userId', onDelete: 'CASCADE' });
-db.UserTest.belongsTo(db.User, { foreignKey: 'userId' });
+db.User.hasMany(db.UserTest, { foreignKey: 'userId', onDelete: 'CASCADE', as: 'UserTests' });
+db.UserTest.belongsTo(db.User, { foreignKey: 'userId', as: 'User' });
 
 // آزمون ↔ نتایج آزمون
-db.Exam.hasMany(db.UserTest, { foreignKey: 'examId', onDelete: 'CASCADE' });
-db.UserTest.belongsTo(db.Exam, { foreignKey: 'examId' });
+db.Exam.hasMany(db.UserTest, { foreignKey: 'examId', onDelete: 'CASCADE', as: 'UserTests' });
+db.UserTest.belongsTo(db.Exam, { foreignKey: 'examId', as: 'Exam' });
 
 // آزمون ↔ نتایج آزمون (ExamResult)
 db.Exam.hasMany(db.ExamResult, { foreignKey: 'examId', onDelete: 'CASCADE' });

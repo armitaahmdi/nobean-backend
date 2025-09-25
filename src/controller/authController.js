@@ -17,7 +17,13 @@ module.exports.sendOtp = async (req, res) => {
   const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // ۵ دقیقه
 
   // ذخیره یا آپدیت OTP
-  await Otp.upsert({ phone, code, expiresAt });
+  try {
+    const result = await Otp.upsert({ phone, code, expiresAt });
+    console.log('OTP stored successfully:', result);
+  } catch (error) {
+    console.error('OTP storage error:', error);
+    return res.status(500).json({ message: "خطا در ذخیره OTP" });
+  }
 
   const message = `به نوبین خوش آمدید. کد ورود شما ${code}`;
 
@@ -47,6 +53,8 @@ module.exports.verifyOtp = async (req, res) => {
   if (!code || !phone) return res.status(400).json({ message: "لطفا کامل کنید" });
 
   const otpEntry = await Otp.findOne({ where: { phone } });
+  console.log('OTP lookup for phone:', phone, 'Found:', otpEntry ? otpEntry.dataValues : 'Not found');
+  
   if (!otpEntry) return res.status(401).json({ message: "کد اشتباه است." });
   if (otpEntry.code !== code.toString()) return res.status(401).json({ message: "کد اشتباه است." });
   if (otpEntry.expiresAt < new Date()) return res.status(401).json({ message: "کد منقضی شده است." });

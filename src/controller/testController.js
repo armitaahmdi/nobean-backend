@@ -326,11 +326,159 @@ exports.deleteQuestion = async (req, res) => {
 };
 
 // submit exam
+// exports.submitExam = async (req, res) => {
+//   try {
+//     const { id: examId } = req.params; // examId از URL
+//     const { answers, timeSpent } = req.body; // answers: { questionId: selectedIndex }
+//     // در صورتی که answers به صورت رشته JSON ارسال شده باشد، پارس کن
+//     let normalizedAnswers = answers;
+//     if (typeof normalizedAnswers === 'string') {
+//       try {
+//         normalizedAnswers = JSON.parse(normalizedAnswers);
+//       } catch (e) {
+//         return res.status(400).json({ error: 'answers must be a valid JSON object' });
+//       }
+//     }
+//     if (!normalizedAnswers || typeof normalizedAnswers !== 'object') {
+//       return res.status(400).json({ error: 'answers must be an object' });
+//     }
+//     const userId = req.user.id; // از JWT middleware
+
+//     // پیدا کردن آزمون همراه با سوال‌ها و گزینه‌ها
+//     const exam = await test.findByPk(examId, {
+//       include: [{ model: question, include: [{ model: Items, as: 'Items' }] }]
+//     });
+
+//     if (!exam) return res.status(404).json({ error: 'آزمون پیدا نشد' });
+
+//     const questions = exam.questions || exam.Questions;
+
+//     if (!questions || questions.length === 0)
+//       return res.status(400).json({ error: 'این آزمون سوالی ندارد' });
+
+//     // محاسبه وزنی: جمع weight گزینه انتخاب‌شده و حداکثر ممکن
+//     let weightedSum = 0;
+//     let maxWeightedSum = 0;
+//     const totalQuestions = questions.length;
+
+//     questions.forEach(q => {
+//       const userAnswer = normalizedAnswers[q.id];
+//       // association: Question.hasMany(Item) as 'Items' → یک ردیف برای هر سوال
+//       const itemsObj = q.Items && Array.isArray(q.Items) ? q.Items[0] : (q.Items || null);
+//       const weights = itemsObj && Array.isArray(itemsObj.weights) ? itemsObj.weights : [];
+//       if (weights.length > 0) {
+//         const maxW = Math.max(...weights);
+//         maxWeightedSum += maxW;
+//         if (typeof userAnswer === 'number' && userAnswer >= 0 && userAnswer < weights.length) {
+//           weightedSum += weights[userAnswer] || 0;
+//         }
+//       }
+//     });
+
+//     // نمره در مقیاس 0..100 بر اساس نسبت وزنی
+//     const score = maxWeightedSum > 0 ? Math.round((weightedSum / maxWeightedSum) * 100) : 0;
+
+//     // ذخیره یا بروزرسانی رکورد UserTest
+//     await userTest.upsert({
+//       userId,
+//       examId,
+//       // ذخیره نسخه نرمالایز شده پاسخ‌ها
+//       answers: normalizedAnswers,
+//       score,
+//       weightedSum,
+//       maxWeightedSum,
+//       correctAnswers: null,
+//       totalQuestions,
+//       timeSpent: timeSpent || 0,
+//       status: 'completed',
+//       completedAt: new Date()
+//     });
+
+//     // گرفتن رکورد برای ارسال در پاسخ
+//     const userTestRecord = await userTest.findOne({
+//       where: { userId, examId },
+//       include: [
+//         {
+//           model: User,
+//           attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+//         }
+//       ]
+//     });
+
+//     res.status(200).json({
+//       message: 'آزمون با موفقیت ثبت شد',
+//       result: {
+//         user: userTestRecord.User,
+//         userName: `${userTestRecord.User?.firstName || ''} ${userTestRecord.User?.lastName || ''}`.trim(),
+//         userPhone: userTestRecord.User?.phone || '',
+//         score: userTestRecord.score,
+//         weightedSum: userTestRecord.weightedSum,
+//         maxWeightedSum: userTestRecord.maxWeightedSum,
+//         correctAnswers: userTestRecord.correctAnswers,
+//         totalQuestions: userTestRecord.totalQuestions,
+//         completedAt: userTestRecord.completedAt,
+//         timeSpent: userTestRecord.timeSpent
+//       }
+//     });
+
+//   } catch (error) {
+//     console.error('Error submitExam:', error);
+//     res.status(500).json({ error: 'خطا در ثبت آزمون' });
+//   }
+// };
+
+// // get exam result
+// exports.getExamResult = async (req, res) => {
+//   try {
+//     const { id: examId } = req.params;
+//     const userId = req.user.id;
+
+//     // پیدا کردن نتیجه آزمون همراه با اطلاعات کاربر
+//     const userTestResult = await userTest.findOne({
+//       where: { userId, examId },
+//       include: [
+//         {
+//           model: User,
+//           attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'mobile', 'fullName']
+//         }
+//       ]
+//     });
+
+//     if (!userTestResult) {
+//       return res.status(404).json({ error: "نتیجه آزمون یافت نشد" });
+//     }
+
+//     res.status(200).json({
+//       message: "نتیجه آزمون دریافت شد",
+//       result: {
+//         user: userTestResult.User,
+//         userName: userTestResult.User?.fullName || `${userTestResult.User?.firstName || ''} ${userTestResult.User?.lastName || ''}`.trim(),
+//         userPhone: userTestResult.User?.mobile || userTestResult.User?.phone || '',
+//         score: userTestResult.score,
+//         correctAnswers: userTestResult.correctAnswers,
+//         totalQuestions: userTestResult.totalQuestions,
+//         completedAt: userTestResult.completedAt,
+//         timeSpent: userTestResult.timeSpent,
+//         answers: userTestResult.answers // پاسخ‌های کاربر
+//       }
+//     });
+
+//   } catch (error) {
+//     console.error("خطا در دریافت نتیجه آزمون:", error);
+//     res.status(500).json({ message: "خطا در دریافت نتیجه آزمون" });
+//   }
+// };
+
+// ========================
+// Submit Exam
+// ========================
 exports.submitExam = async (req, res) => {
   try {
-    const { id: examId } = req.params; // examId از URL
-    const { answers, timeSpent } = req.body; // answers: { questionId: selectedIndex }
-    // در صورتی که answers به صورت رشته JSON ارسال شده باشد، پارس کن
+    const { id: examId } = req.params;
+    const { answers, timeSpent } = req.body;
+    const userId = req.user.id;
+
+    // normalize answers
     let normalizedAnswers = answers;
     if (typeof normalizedAnswers === 'string') {
       try {
@@ -342,28 +490,23 @@ exports.submitExam = async (req, res) => {
     if (!normalizedAnswers || typeof normalizedAnswers !== 'object') {
       return res.status(400).json({ error: 'answers must be an object' });
     }
-    const userId = req.user.id; // از JWT middleware
 
-    // پیدا کردن آزمون همراه با سوال‌ها و گزینه‌ها
-    const exam = await test.findByPk(examId, {
-      include: [{ model: question, include: [{ model: Items, as: 'Items' }] }]
+    // get exam with questions & items
+    const exam = await db.Exam.findByPk(examId, {
+      include: [{ model: db.Question, include: [{ model: db.Item, as: 'Items' }] }]
     });
-
     if (!exam) return res.status(404).json({ error: 'آزمون پیدا نشد' });
 
-    const questions = exam.questions || exam.Questions;
+    const questions = exam.questions || exam.Questions || [];
+    if (questions.length === 0) return res.status(400).json({ error: 'این آزمون سوالی ندارد' });
 
-    if (!questions || questions.length === 0)
-      return res.status(400).json({ error: 'این آزمون سوالی ندارد' });
-
-    // محاسبه وزنی: جمع weight گزینه انتخاب‌شده و حداکثر ممکن
+    // calculate score
     let weightedSum = 0;
     let maxWeightedSum = 0;
     const totalQuestions = questions.length;
 
     questions.forEach(q => {
       const userAnswer = normalizedAnswers[q.id];
-      // association: Question.hasMany(Item) as 'Items' → یک ردیف برای هر سوال
       const itemsObj = q.Items && Array.isArray(q.Items) ? q.Items[0] : (q.Items || null);
       const weights = itemsObj && Array.isArray(itemsObj.weights) ? itemsObj.weights : [];
       if (weights.length > 0) {
@@ -375,14 +518,12 @@ exports.submitExam = async (req, res) => {
       }
     });
 
-    // نمره در مقیاس 0..100 بر اساس نسبت وزنی
     const score = maxWeightedSum > 0 ? Math.round((weightedSum / maxWeightedSum) * 100) : 0;
 
-    // ذخیره یا بروزرسانی رکورد UserTest
-    await userTest.upsert({
+    // save or update userTest
+    await db.UserTest.upsert({
       userId,
       examId,
-      // ذخیره نسخه نرمالایز شده پاسخ‌ها
       answers: normalizedAnswers,
       score,
       weightedSum,
@@ -394,30 +535,28 @@ exports.submitExam = async (req, res) => {
       completedAt: new Date()
     });
 
-    // گرفتن رکورد برای ارسال در پاسخ
-    const userTestRecord = await userTest.findOne({
-      where: { userId, examId },
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
-        }
-      ]
+    // get userTest record
+    const userTestRecord = await db.UserTest.findOne({ where: { userId, examId } });
+
+    // get user info
+    const user = await db.User.findByPk(userId, {
+      attributes: ['id', 'firstName', 'lastName', 'userName', 'email', 'phone', 'mobile', 'fullName']
     });
 
     res.status(200).json({
       message: 'آزمون با موفقیت ثبت شد',
       result: {
-        user: userTestRecord.User,
-        userName: `${userTestRecord.User?.firstName || ''} ${userTestRecord.User?.lastName || ''}`.trim(),
-        userPhone: userTestRecord.User?.phone || '',
-        score: userTestRecord.score,
-        weightedSum: userTestRecord.weightedSum,
-        maxWeightedSum: userTestRecord.maxWeightedSum,
-        correctAnswers: userTestRecord.correctAnswers,
-        totalQuestions: userTestRecord.totalQuestions,
-        completedAt: userTestRecord.completedAt,
-        timeSpent: userTestRecord.timeSpent
+        user,
+        userName: user?.fullName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim(),
+        userPhone: user?.mobile || user?.phone || '',
+        score: userTestRecord?.score || 0,
+        weightedSum: userTestRecord?.weightedSum || 0,
+        maxWeightedSum: userTestRecord?.maxWeightedSum || 0,
+        correctAnswers: userTestRecord?.correctAnswers,
+        totalQuestions: userTestRecord?.totalQuestions,
+        completedAt: userTestRecord?.completedAt,
+        timeSpent: userTestRecord?.timeSpent || 0,
+        answers: userTestRecord?.answers
       }
     });
 
@@ -427,39 +566,33 @@ exports.submitExam = async (req, res) => {
   }
 };
 
-// get exam result
+// ========================
+// Get Exam Result
+// ========================
 exports.getExamResult = async (req, res) => {
   try {
     const { id: examId } = req.params;
     const userId = req.user.id;
 
-    // پیدا کردن نتیجه آزمون همراه با اطلاعات کاربر
-    const userTestResult = await userTest.findOne({
-      where: { userId, examId },
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'mobile', 'fullName']
-        }
-      ]
-    });
+    const userTestResult = await db.UserTest.findOne({ where: { userId, examId } });
+    if (!userTestResult) return res.status(404).json({ error: "نتیجه آزمون یافت نشد" });
 
-    if (!userTestResult) {
-      return res.status(404).json({ error: "نتیجه آزمون یافت نشد" });
-    }
+    const user = await db.User.findByPk(userId, {
+      attributes: ['id', 'firstName', 'lastName', 'userName', 'email', 'phone', 'mobile', 'fullName']
+    });
 
     res.status(200).json({
       message: "نتیجه آزمون دریافت شد",
       result: {
-        user: userTestResult.User,
-        userName: userTestResult.User?.fullName || `${userTestResult.User?.firstName || ''} ${userTestResult.User?.lastName || ''}`.trim(),
-        userPhone: userTestResult.User?.mobile || userTestResult.User?.phone || '',
-        score: userTestResult.score,
-        correctAnswers: userTestResult.correctAnswers,
-        totalQuestions: userTestResult.totalQuestions,
-        completedAt: userTestResult.completedAt,
-        timeSpent: userTestResult.timeSpent,
-        answers: userTestResult.answers // پاسخ‌های کاربر
+        user,
+        userName: user?.fullName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim(),
+        userPhone: user?.mobile || user?.phone || '',
+        score: userTestResult?.score || 0,
+        correctAnswers: userTestResult?.correctAnswers,
+        totalQuestions: userTestResult?.totalQuestions,
+        completedAt: userTestResult?.completedAt,
+        timeSpent: userTestResult?.timeSpent || 0,
+        answers: userTestResult?.answers
       }
     });
 
@@ -468,6 +601,7 @@ exports.getExamResult = async (req, res) => {
     res.status(500).json({ message: "خطا در دریافت نتیجه آزمون" });
   }
 };
+
 
 // Admin: list results of an exam with user info and pagination
 exports.getExamResults = async (req, res) => {

@@ -400,7 +400,7 @@ exports.submitExam = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+          attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
         }
       ]
     });
@@ -409,8 +409,6 @@ exports.submitExam = async (req, res) => {
       message: 'آزمون با موفقیت ثبت شد',
       result: {
         user: userTestRecord.User,
-        userName: `${userTestRecord.User?.firstName || ''} ${userTestRecord.User?.lastName || ''}`.trim(),
-        userPhone: userTestRecord.User?.phone || '',
         score: userTestRecord.score,
         weightedSum: userTestRecord.weightedSum,
         maxWeightedSum: userTestRecord.maxWeightedSum,
@@ -439,7 +437,7 @@ exports.getExamResult = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'mobile', 'fullName']
+          attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
         }
       ]
     });
@@ -452,8 +450,6 @@ exports.getExamResult = async (req, res) => {
       message: "نتیجه آزمون دریافت شد",
       result: {
         user: userTestResult.User,
-        userName: userTestResult.User?.fullName || `${userTestResult.User?.firstName || ''} ${userTestResult.User?.lastName || ''}`.trim(),
-        userPhone: userTestResult.User?.mobile || userTestResult.User?.phone || '',
         score: userTestResult.score,
         correctAnswers: userTestResult.correctAnswers,
         totalQuestions: userTestResult.totalQuestions,
@@ -483,7 +479,7 @@ exports.getExamResults = async (req, res) => {
 
     const userInclude = {
       model: User,
-      attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+      attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
     };
 
     if (search && String(search).trim() !== '') {
@@ -510,7 +506,7 @@ exports.getExamResults = async (req, res) => {
     const results = rows.map(r => ({
       id: r.id,
       userId: r.userId,
-      userName: r.User ? (`${r.User.firstName || ''} ${r.User.lastName || ''}`.trim() || 'کاربر') : 'کاربر',
+      user: r.User,
       userEmail: r.User ? r.User.email : '',
       userPhone: r.User ? (r.User.phone || '') : '',
       score: r.score || 0,
@@ -585,7 +581,7 @@ exports.getAllExamAttempts = async (req, res) => {
     const includes = [
       {
         model: User,
-        attributes: ['id', 'firstName', 'lastName', 'email', 'phone']
+        attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
       },
       {
         model: test,
@@ -618,8 +614,7 @@ exports.getAllExamAttempts = async (req, res) => {
     const attempts = rows.map(r => ({
       id: r.id,
       userId: r.userId,
-      userName: r.User ? `${r.User.firstName || ''} ${r.User.lastName || ''}`.trim() : 'کاربر',
-      userPhone: r.User ? (r.User.phone || r.User.mobile || '') : '',
+      user: r.User,
       examId: r.examId,
       examTitle: r.Exam ? r.Exam.title : '',
       score: r.score || 0,

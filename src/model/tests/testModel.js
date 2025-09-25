@@ -79,5 +79,19 @@ descriptionVideo: {
     tableName: 'exams' // Ensure we're using the correct table name
   });
 
+  Exam.associate = (models) => {
+    // Exam has many UserTest
+    Exam.hasMany(models.UserTest, {
+      foreignKey: 'examId',
+      as: 'UserTests'
+    });
+
+    // Exam has many Questions
+    Exam.hasMany(models.Question, {
+      foreignKey: 'examId',
+      as: 'Questions'
+    });
+  };
+
   return Exam;
 };

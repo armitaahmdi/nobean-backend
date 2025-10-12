@@ -67,10 +67,31 @@ suitableFor: {
   type: DataTypes.JSON,
   allowNull: true
 },
+components: {
+  type: DataTypes.JSON,
+  allowNull: true,
+  comment: 'لیست مولفه‌های آزمون (آرایه‌ای از رشته‌ها)'
+},
 descriptionVideo: {
   type: DataTypes.STRING,
   allowNull: true,
   comment: 'URL of description video'
+},
+minAge: {
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  comment: 'Minimum recommended age'
+},
+maxAge: {
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  comment: 'Maximum recommended age'
+},
+status: {
+  type: DataTypes.ENUM('draft', 'active', 'inactive'),
+  allowNull: false,
+  defaultValue: 'draft',
+  comment: 'Test status: draft, active, inactive'
 }
 
     

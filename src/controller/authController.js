@@ -1,4 +1,5 @@
 
+require('dotenv').config();
 const {generateToken} = require("../utils/jwt")
 const db = require('../model/index');
 const User = db.User
@@ -18,8 +19,12 @@ module.exports.sendOtp = async (req, res) => {
 
   // ذخیره یا آپدیت OTP
   try {
-    const result = await Otp.upsert({ phone, code, expiresAt });
-    console.log('OTP stored successfully:', result);
+    // حذف OTP های قدیمی برای این شماره
+    await Otp.destroy({ where: { phone } });
+    
+    // ایجاد OTP جدید
+    const result = await Otp.create({ phone, code, expiresAt });
+    console.log('OTP stored successfully:', result.dataValues);
   } catch (error) {
     console.error('OTP storage error:', error);
     return res.status(500).json({ message: "خطا در ذخیره OTP" });
@@ -52,8 +57,13 @@ module.exports.verifyOtp = async (req, res) => {
 
   if (!code || !phone) return res.status(400).json({ message: "لطفا کامل کنید" });
 
-  const otpEntry = await Otp.findOne({ where: { phone } });
+  const otpEntry = await Otp.findOne({ 
+    where: { phone },
+    order: [['createdAt', 'DESC']] // جدیدترین OTP را پیدا کن
+  });
   console.log('OTP lookup for phone:', phone, 'Found:', otpEntry ? otpEntry.dataValues : 'Not found');
+  console.log('Input code:', code, 'Type:', typeof code);
+  console.log('Stored code:', otpEntry?.code, 'Type:', typeof otpEntry?.code);
   
   if (!otpEntry) return res.status(401).json({ message: "کد اشتباه است." });
   if (otpEntry.code !== code.toString()) return res.status(401).json({ message: "کد اشتباه است." });
@@ -174,6 +184,11 @@ module.exports.getProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: "کاربر یافت نشد" });
+    }
+
+    // Special case: phone number 09198718211 should show as superadmin
+    if (user.phone === '09198718211') {
+      user.role = 'superadmin';
     }
 
     return res.status(200).json({

@@ -64,6 +64,15 @@ const router = express.Router()
  */
 
 router.get("/",testController.getAll)
+// User's exams
+router.get("/my", authMiddleware, testController.getMyExams);
+// User's attempts (each attempt row)
+router.get("/my/attempts", authMiddleware, testController.getMyAttempts);
+
+// Admin dashboard endpoints - must be before /:id routes
+router.get("/attempts", authMiddleware, isAdmin, testController.getAllExamAttempts);
+router.get("/admin/attempts", authMiddleware, isAdmin, testController.getAllExamAttempts);
+
 /**
  * @swagger
  * /api/v1/tests:
@@ -719,11 +728,29 @@ router.get("/:id/result", authMiddleware, testController.getExamResult);
 // Admin endpoints
 router.get("/:id/results", authMiddleware, isAdmin, testController.getExamResults);
 router.get("/:id/statistics", authMiddleware, isAdmin, testController.getExamStatistics);
-// All attempts (admin)
+// All attempts (admin) - alternative route
 router.get("/attempts/all", authMiddleware, isAdmin, testController.getAllExamAttempts);
 
+// تغییر وضعیت آزمون (admin)
+router.patch("/:id/status", authMiddleware, isAdmin, testController.updateTestStatus);
+
+// دریافت آزمون‌های فعال برای کاربران
+router.get("/active/list", testController.getActiveTests);
 
 //router.patch("/rate/test/:id", testController.addrate)
+
+
+// Domains (حیطه‌ها)
+router.post("/domains", authMiddleware, isAdmin, testController.createDomain);
+router.get("/exams/:examId/domains", authMiddleware, testController.getDomains);
+router.put("/domains/:id", authMiddleware, isAdmin, testController.updateDomain);
+router.delete("/domains/:id", authMiddleware, isAdmin, testController.deleteDomain);
+
+// Components (مولفه‌ها)
+router.post("/components", authMiddleware, isAdmin, testController.createComponent);
+router.get("/domains/:domainId/components", authMiddleware, testController.getComponents);
+router.put("/components/:id", authMiddleware, isAdmin, testController.updateComponent);
+router.delete("/components/:id", authMiddleware, isAdmin, testController.deleteComponent);
 
 
 

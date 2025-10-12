@@ -111,6 +111,7 @@ const cartRouter = require("./src/router/cartRouter");
 const commentRouter = require("./src/router/commentRouter");
 const categoryRouter = require("./src/router/categoryRouter");
 const uploadRouter = require("./src/router/uploadRouter");
+const userRouter = require("./src/router/userRouter");
 
 // Swagger
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger');
@@ -160,7 +161,9 @@ app.use(sessions({
 // Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/tests", testRouter);
+app.use("/api/v1/admin/tests", testRouter); // Admin test routes
 app.use("/api/v1/users", authRouter);
+app.use("/api/v1/admin/users", userRouter);
 app.use("/api/v1/podcasts", podcastRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/carts", cartRouter);

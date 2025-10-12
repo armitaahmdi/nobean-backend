@@ -4,7 +4,13 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "migrate": "node migrate-to-mysql.js",
+    "migrate-data": "node data-migration.js",
+    "test-migration": "node test-migration.js",
+    "add-status-field": "node add-status-field.js",
+    "check-exam-status": "node check-exam-status.js",
+    "deploy-status-field": "node deploy-status-field.js"
   },
   "keywords": [],
   "author": "",

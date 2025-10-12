@@ -18,10 +18,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       comment: 'توضیح کوتاه درباره سوال'
     },
-    number: {
+    questionNumber: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: 'شماره سوال در آزمون'
+    },
+    componentId: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      comment: 'شناسه مولفه‌ای که سوال به آن تعلق دارد'
     }
   });
 

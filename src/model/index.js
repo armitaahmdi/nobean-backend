@@ -13,6 +13,8 @@ db.Exam = require('./tests/testModel')(sequelize, DataTypes);
 db.Question = require('./tests/questionModel')(sequelize, DataTypes);
 db.Item = require('./tests/itemsQuestionModel')(sequelize, DataTypes);
 db.UserTest = require('./tests/userTestModel')(sequelize, DataTypes);
+db.Domain = require('./tests/domainModel')(sequelize, DataTypes);
+db.Component = require('./tests/componentModel')(sequelize, DataTypes);
 db.Category = require('./categoryModel')(sequelize, DataTypes);
 db.CategoryTest = require('./tests/categoryTestModel')(sequelize, DataTypes);
 db.Article = require('./articles/articleModel')(sequelize, DataTypes);
@@ -34,6 +36,18 @@ db.Webinar = require('./WebinarModel')(sequelize, DataTypes);
 // روابط آزمون و سوالات
 db.Exam.hasMany(db.Question, { foreignKey: 'examId', onDelete: 'CASCADE' });
 db.Question.belongsTo(db.Exam, { foreignKey: 'examId' });
+
+// روابط آزمون و حیطه‌ها
+db.Exam.hasMany(db.Domain, { foreignKey: 'examId', onDelete: 'CASCADE' });
+db.Domain.belongsTo(db.Exam, { foreignKey: 'examId' });
+
+// روابط حیطه و مولفه‌ها
+db.Domain.hasMany(db.Component, { foreignKey: 'domainId', onDelete: 'CASCADE' });
+db.Component.belongsTo(db.Domain, { foreignKey: 'domainId' });
+
+// روابط مولفه و سوالات
+db.Component.hasMany(db.Question, { foreignKey: 'componentId', onDelete: 'SET NULL' });
+db.Question.belongsTo(db.Component, { foreignKey: 'componentId' });
 
 // سوال و گزینه‌ها
 db.Question.hasMany(db.Item, { foreignKey: 'questionId', onDelete: 'CASCADE', as: 'Items' });

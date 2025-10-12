@@ -10,6 +10,8 @@ const userTest = db.UserTest
 const Comment = db.Comment
 const User = db.User;
 const ExamResult = db.ExamResult;
+const Domain = db.Domain;
+const Component = db.Component;
 const { Op, fn, col, literal } = require('sequelize');
 
 
@@ -39,7 +41,11 @@ exports.createTest = async (req, res) => {
       category,
       imagepath,
       suitableFor,
-      tags
+      tags,
+      descriptionVideo,
+      minAge,
+      maxAge,
+      components
     } = req.body;
 
     // اعتبارسنجی ورودی
@@ -58,7 +64,11 @@ exports.createTest = async (req, res) => {
       category,
       imagepath,
       suitableFor,
-      tags
+      tags,
+      descriptionVideo: descriptionVideo || null,
+      minAge: (minAge === undefined || minAge === null || isNaN(parseInt(minAge))) ? null : parseInt(minAge),
+      maxAge: (maxAge === undefined || maxAge === null || isNaN(parseInt(maxAge))) ? null : parseInt(maxAge),
+      components: Array.isArray(components) ? components : null
     });
 
     res.status(201).json({
@@ -75,7 +85,20 @@ exports.getTest = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const testData = await test.findByPk(id);
+    const testData = await test.findByPk(id, {
+      include: [
+        {
+          model: Domain,
+          include: [
+            { model: Component }
+          ]
+        }
+      ],
+      order: [
+        [Domain, 'order', 'ASC'],
+        [Domain, Component, 'order', 'ASC']
+      ]
+    });
 
     if (!testData) {
       return res.status(404).json({ error: "تست مورد نظر پیدا نشد." });
@@ -124,27 +147,23 @@ exports.deleteTest = async (req, res) => {
 exports.createTestQuestion = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, items, correctIndex, weights } = req.body;
+    const { title, items, weights, componentId, questionNumber, description } = req.body;
 
     // اعتبارسنجی ورودی
-    if (!title || !items || !Array.isArray(items) || correctIndex === undefined) {
+    if (!title || !items || !Array.isArray(items)) {
       return res.status(400).json({ error: "اطلاعات ناقص است" });
     }
 
-    if (correctIndex < 0 || correctIndex >= items.length) {
-      return res.status(400).json({ error: "اندیس پاسخ صحیح نامعتبر است" });
-    }
-
-    // اعتبارسنجی weights در صورت ارسال
+  // اعتبارسنجی weights در صورت ارسال
     let normalizedWeights = null;
     if (weights !== undefined) {
       if (!Array.isArray(weights) || weights.length !== items.length) {
         return res.status(400).json({ error: "weights باید آرایه‌ای هم‌طول items باشد" });
       }
-      // محدود به 1..5 و اعداد صحیح
+    // محدود به -1..10 و اعداد صحیح
       normalizedWeights = weights.map(w => {
         const v = parseInt(w, 10);
-        if (isNaN(v) || v < 1 || v > 5) return 1;
+      if (isNaN(v) || v < -1 || v > 10) return 1;
         return v;
       });
     }
@@ -152,14 +171,16 @@ exports.createTestQuestion = async (req, res) => {
     // ایجاد سوال
     const newQuestion = await question.create({
       examId: id,
-      title: title
+      title: title,
+      description: description || null,
+      componentId: componentId || null,
+      questionNumber: questionNumber || null
     });
 
     // ایجاد گزینه‌ها
     const newItems = await Items.create({
       questionId: newQuestion.id,
       items: items,
-      correctIndex: correctIndex,
       weights: normalizedWeights
     });
 
@@ -168,12 +189,14 @@ exports.createTestQuestion = async (req, res) => {
       question: {
         id: newQuestion.id,
         examId: newQuestion.examId,
-        title: newQuestion.title
+        title: newQuestion.title,
+        description: newQuestion.description,
+        componentId: newQuestion.componentId,
+        questionNumber: newQuestion.questionNumber
       },
       options: {
         questionId: newItems.questionId,
         items: newItems.items,
-        correctIndex: newItems.correctIndex,
         weights: newItems.weights
       }
     });
@@ -194,8 +217,17 @@ exports.showQuestion = async (req, res) => {
         {
           model: Items,
           as: 'Items'
+        },
+        {
+          model: Component,
+          include: [
+            {
+              model: Domain
+            }
+          ]
         }
-      ]
+      ],
+      order: [['questionNumber', 'ASC']]
     });
 
     res.status(200).json({ questions });
@@ -208,18 +240,14 @@ exports.showQuestion = async (req, res) => {
 exports.updateQuestion = async (req, res) => {
   try {
     const { id, questionId } = req.params;
-    const { title, items, correctIndex, weights } = req.body;
+    const { title, items, weights, componentId, questionNumber, description } = req.body;
 
     // اعتبارسنجی ورودی
-    if (!title || !items || !Array.isArray(items) || correctIndex === undefined) {
+    if (!title || !items || !Array.isArray(items)) {
       return res.status(400).json({ error: "اطلاعات ناقص است" });
     }
 
-    if (correctIndex < 0 || correctIndex >= items.length) {
-      return res.status(400).json({ error: "اندیس پاسخ صحیح نامعتبر است" });
-    }
-
-    // اعتبارسنجی weights در صورت ارسال
+  // اعتبارسنجی weights در صورت ارسال
     let normalizedWeights = null;
     if (weights !== undefined) {
       if (!Array.isArray(weights) || weights.length !== items.length) {
@@ -227,7 +255,7 @@ exports.updateQuestion = async (req, res) => {
       }
       normalizedWeights = weights.map(w => {
         const v = parseInt(w, 10);
-        if (isNaN(v) || v < 1 || v > 5) return 1;
+      if (isNaN(v) || v < -1 || v > 10) return 1;
         return v;
       });
     }
@@ -245,7 +273,12 @@ exports.updateQuestion = async (req, res) => {
     }
 
     // به‌روزرسانی سوال
-    await existingQuestion.update({ title });
+    await existingQuestion.update({ 
+      title, 
+      description: description !== undefined ? description : existingQuestion.description,
+      componentId: componentId !== undefined ? componentId : existingQuestion.componentId,
+      questionNumber: questionNumber !== undefined ? questionNumber : existingQuestion.questionNumber
+    });
 
     // به‌روزرسانی گزینه‌ها
     const existingItems = await Items.findOne({
@@ -255,14 +288,12 @@ exports.updateQuestion = async (req, res) => {
     if (existingItems) {
       await existingItems.update({
         items: items,
-        correctIndex: correctIndex,
         weights: normalizedWeights !== null ? normalizedWeights : existingItems.weights
       });
     } else {
       await Items.create({
         questionId: questionId,
         items: items,
-        correctIndex: correctIndex,
         weights: normalizedWeights
       });
     }
@@ -281,7 +312,10 @@ exports.updateQuestion = async (req, res) => {
       message: "سوال با موفقیت به‌روزرسانی شد",
       question: {
         id: updatedQuestion.id,
-        title: updatedQuestion.title
+        title: updatedQuestion.title,
+        description: updatedQuestion.description,
+        componentId: updatedQuestion.componentId,
+        questionNumber: updatedQuestion.questionNumber
       }
     });
 
@@ -378,8 +412,8 @@ exports.submitExam = async (req, res) => {
     // نمره در مقیاس 0..100 بر اساس نسبت وزنی
     const score = maxWeightedSum > 0 ? Math.round((weightedSum / maxWeightedSum) * 100) : 0;
 
-    // ذخیره یا بروزرسانی رکورد UserTest
-    await userTest.upsert({
+    // ایجاد رکورد جدید UserTest (اجازه چندین بار شرکت در آزمون)
+    const userTestRecord = await userTest.create({
       userId,
       examId,
       // ذخیره نسخه نرمالایز شده پاسخ‌ها
@@ -394,12 +428,12 @@ exports.submitExam = async (req, res) => {
       completedAt: new Date()
     });
 
-    // گرفتن رکورد برای ارسال در پاسخ
-    const userTestRecord = await userTest.findOne({
-      where: { userId, examId },
+    // گرفتن رکورد کامل با اطلاعات کاربر
+    const userTestRecordWithUser = await userTest.findByPk(userTestRecord.id, {
       include: [
         {
           model: User,
+          as: 'User',
           attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
         }
       ]
@@ -408,14 +442,14 @@ exports.submitExam = async (req, res) => {
     res.status(200).json({
       message: 'آزمون با موفقیت ثبت شد',
       result: {
-        user: userTestRecord.User,
-        score: userTestRecord.score,
-        weightedSum: userTestRecord.weightedSum,
-        maxWeightedSum: userTestRecord.maxWeightedSum,
-        correctAnswers: userTestRecord.correctAnswers,
-        totalQuestions: userTestRecord.totalQuestions,
-        completedAt: userTestRecord.completedAt,
-        timeSpent: userTestRecord.timeSpent
+        user: userTestRecordWithUser.User,
+        score: userTestRecordWithUser.score,
+        weightedSum: userTestRecordWithUser.weightedSum,
+        maxWeightedSum: userTestRecordWithUser.maxWeightedSum,
+        correctAnswers: userTestRecordWithUser.correctAnswers,
+        totalQuestions: userTestRecordWithUser.totalQuestions,
+        completedAt: userTestRecordWithUser.completedAt,
+        timeSpent: userTestRecordWithUser.timeSpent
       }
     });
 
@@ -431,15 +465,17 @@ exports.getExamResult = async (req, res) => {
     const { id: examId } = req.params;
     const userId = req.user.id;
 
-    // پیدا کردن نتیجه آزمون همراه با اطلاعات کاربر
+    // پیدا کردن آخرین نتیجه آزمون همراه با اطلاعات کاربر
     const userTestResult = await userTest.findOne({
       where: { userId, examId },
       include: [
         {
           model: User,
+          as: 'User',
           attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
         }
-      ]
+      ],
+      order: [['completedAt', 'DESC']] // آخرین نتیجه را بگیر
     });
 
     if (!userTestResult) {
@@ -479,6 +515,7 @@ exports.getExamResults = async (req, res) => {
 
     const userInclude = {
       model: User,
+      as: 'User',
       attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
     };
 
@@ -581,10 +618,12 @@ exports.getAllExamAttempts = async (req, res) => {
     const includes = [
       {
         model: User,
+        as: 'User',
         attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'userName']
       },
       {
         model: test,
+        as: 'Exam',
         attributes: ['id', 'title']
       }
     ];
@@ -641,6 +680,335 @@ exports.getAllExamAttempts = async (req, res) => {
   } catch (error) {
     console.error('خطا در دریافت لیست همه تلاش‌های آزمون:', error);
     res.status(500).json({ message: 'خطا در دریافت لیست تلاش‌های آزمون' });
+  }
+};
+
+  // Exams of current user (distinct exams with summary stats)
+  exports.getMyExams = async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      // Aggregate attempts by examId for this user
+      const aggregates = await userTest.findAll({
+        where: { userId },
+        attributes: [
+          'examId',
+          [fn('COUNT', col('id')), 'attempts'],
+          [fn('MAX', col('completedAt')), 'lastCompletedAt'],
+          [fn('MAX', col('score')), 'bestScore']
+        ],
+        group: ['examId'],
+        raw: true
+      });
+
+      const examIds = aggregates.map(a => a.examId).filter(Boolean);
+      let exams = [];
+      if (examIds.length > 0) {
+        exams = await test.findAll({
+          where: { id: examIds },
+          order: [['createdAt', 'DESC']]
+        });
+      }
+
+      // Index aggregates by examId
+      const examIdToAgg = Object.fromEntries(aggregates.map(a => [a.examId, a]));
+
+      const items = exams.map(e => {
+        const agg = examIdToAgg[e.id] || {};
+        return {
+          id: e.id,
+          title: e.title,
+          imagepath: e.imagepath,
+          ShortDescription: e.ShortDescription,
+          time: e.time,
+          price: e.price,
+          attempts: Number(agg.attempts || 0),
+          lastCompletedAt: agg.lastCompletedAt || null,
+          bestScore: agg.bestScore !== undefined && agg.bestScore !== null ? Math.round(Number(agg.bestScore)) : null,
+        };
+      });
+
+      res.status(200).json({ items });
+    } catch (error) {
+      console.error('Error fetching my exams:', error);
+      res.status(500).json({ error: 'خطا در دریافت آزمون‌های کاربر' });
+    }
+  };
+
+  // Attempts of current user (each attempt as a separate row)
+  exports.getMyAttempts = async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { page = 1, limit = 20 } = req.query;
+      const pageNumber = Math.max(parseInt(page) || 1, 1);
+      const pageSize = Math.min(Math.max(parseInt(limit) || 20, 1), 100);
+      const offset = (pageNumber - 1) * pageSize;
+
+      const { rows, count } = await userTest.findAndCountAll({
+        where: { userId },
+        include: [
+          {
+            model: test,
+            as: 'Exam',
+            attributes: ['id', 'title', 'ShortDescription', 'category', 'imagepath']
+          }
+        ],
+        order: [['completedAt', 'DESC']],
+        limit: pageSize,
+        offset
+      });
+
+      const items = rows.map(r => ({
+        id: r.id,
+        examId: r.examId,
+        completedAt: r.completedAt,
+        timeSpent: r.timeSpent || 0,
+        status: r.status,
+        // optional fields if exist
+        score: r.score ?? null,
+        Exam: r.Exam ? {
+          id: r.Exam.id,
+          title: r.Exam.title,
+          ShortDescription: r.Exam.ShortDescription,
+          category: r.Exam.category,
+          imagepath: r.Exam.imagepath
+        } : null
+      }));
+
+      res.status(200).json({
+        items,
+        pagination: {
+          total: count,
+          page: pageNumber,
+          limit: pageSize,
+          totalPages: Math.ceil(count / pageSize) || 1
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching my attempts:', error);
+      res.status(500).json({ error: 'خطا در دریافت لیست تلاش‌های شما' });
+    }
+  };
+
+// تغییر وضعیت آزمون
+exports.updateTestStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    // اعتبارسنجی وضعیت
+    if (!['draft', 'active', 'inactive'].includes(status)) {
+      return res.status(400).json({ error: "وضعیت نامعتبر است" });
+    }
+
+    // بررسی وجود آزمون
+    const existingTest = await test.findByPk(id);
+    if (!existingTest) {
+      return res.status(404).json({ error: "آزمون یافت نشد" });
+    }
+
+    // به‌روزرسانی وضعیت
+    await test.update(
+      { status: status },
+      { where: { id: id } }
+    );
+
+    res.status(200).json({ 
+      message: "وضعیت آزمون با موفقیت تغییر یافت",
+      status: status 
+    });
+
+  } catch (error) {
+    console.error('Error updating test status:', error);
+    res.status(500).json({ error: "خطا در تغییر وضعیت آزمون" });
+  }
+};
+
+// دریافت آزمون‌های فعال برای کاربران
+exports.getActiveTests = async (req, res) => {
+  try {
+    const tests = await test.findAll({
+      where: {
+        status: 'active'
+      },
+      order: [['createdAt', 'DESC']],
+      limit: 100
+    });
+    
+    res.status(200).json(tests);
+  } catch (error) {
+    console.error('Error fetching active tests:', error);
+    res.status(500).json({ error: "مشکلی در دریافت آزمون‌های فعال به وجود آمد" });
+  }
+};
+
+// مدیریت حیطه‌ها (Domains)
+exports.createDomain = async (req, res) => {
+  try {
+    const { examId, name, description, order } = req.body;
+
+    if (!examId || !name) {
+      return res.status(400).json({ error: "شناسه آزمون و نام حیطه الزامی است" });
+    }
+
+    const newDomain = await Domain.create({
+      examId,
+      name,
+      description: description || null,
+      order: order || 0
+    });
+
+    res.status(201).json({
+      message: "حیطه با موفقیت ایجاد شد",
+      domain: newDomain
+    });
+  } catch (error) {
+    console.error("خطا در ایجاد حیطه:", error);
+    res.status(500).json({ error: "مشکلی در ایجاد حیطه به وجود آمد" });
+  }
+};
+
+exports.getDomains = async (req, res) => {
+  try {
+    const { examId } = req.params;
+
+    const domains = await Domain.findAll({
+      where: { examId },
+      order: [['order', 'ASC']]
+    });
+
+    res.status(200).json(domains);
+  } catch (error) {
+    console.error("خطا در دریافت حیطه‌ها:", error);
+    res.status(500).json({ error: "مشکلی در دریافت حیطه‌ها به وجود آمد" });
+  }
+};
+
+exports.updateDomain = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, order } = req.body;
+
+    const domain = await Domain.findByPk(id);
+    if (!domain) {
+      return res.status(404).json({ error: "حیطه مورد نظر پیدا نشد" });
+    }
+
+    await domain.update({
+      name: name || domain.name,
+      description: description !== undefined ? description : domain.description,
+      order: order !== undefined ? order : domain.order
+    });
+
+    res.status(200).json({
+      message: "حیطه با موفقیت به‌روزرسانی شد",
+      domain
+    });
+  } catch (error) {
+    console.error("خطا در به‌روزرسانی حیطه:", error);
+    res.status(500).json({ error: "مشکلی در به‌روزرسانی حیطه به وجود آمد" });
+  }
+};
+
+exports.deleteDomain = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const domain = await Domain.findByPk(id);
+    if (!domain) {
+      return res.status(404).json({ error: "حیطه مورد نظر پیدا نشد" });
+    }
+
+    await domain.destroy();
+    res.status(200).json({ message: "حیطه با موفقیت حذف شد" });
+  } catch (error) {
+    console.error("خطا در حذف حیطه:", error);
+    res.status(500).json({ error: "مشکلی در حذف حیطه به وجود آمد" });
+  }
+};
+
+// مدیریت مولفه‌ها (Components)
+exports.createComponent = async (req, res) => {
+  try {
+    const { domainId, name, description, order } = req.body;
+
+    if (!domainId || !name) {
+      return res.status(400).json({ error: "شناسه حیطه و نام مولفه الزامی است" });
+    }
+
+    const newComponent = await Component.create({
+      domainId,
+      name,
+      description: description || null,
+      order: order || 0
+    });
+
+    res.status(201).json({
+      message: "مولفه با موفقیت ایجاد شد",
+      component: newComponent
+    });
+  } catch (error) {
+    console.error("خطا در ایجاد مولفه:", error);
+    res.status(500).json({ error: "مشکلی در ایجاد مولفه به وجود آمد" });
+  }
+};
+
+exports.getComponents = async (req, res) => {
+  try {
+    const { domainId } = req.params;
+
+    const components = await Component.findAll({
+      where: { domainId },
+      order: [['order', 'ASC']]
+    });
+
+    res.status(200).json(components);
+  } catch (error) {
+    console.error("خطا در دریافت مولفه‌ها:", error);
+    res.status(500).json({ error: "مشکلی در دریافت مولفه‌ها به وجود آمد" });
+  }
+};
+
+exports.updateComponent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, order } = req.body;
+
+    const component = await Component.findByPk(id);
+    if (!component) {
+      return res.status(404).json({ error: "مولفه مورد نظر پیدا نشد" });
+    }
+
+    await component.update({
+      name: name || component.name,
+      description: description !== undefined ? description : component.description,
+      order: order !== undefined ? order : component.order
+    });
+
+    res.status(200).json({
+      message: "مولفه با موفقیت به‌روزرسانی شد",
+      component
+    });
+  } catch (error) {
+    console.error("خطا در به‌روزرسانی مولفه:", error);
+    res.status(500).json({ error: "مشکلی در به‌روزرسانی مولفه به وجود آمد" });
+  }
+};
+
+exports.deleteComponent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const component = await Component.findByPk(id);
+    if (!component) {
+      return res.status(404).json({ error: "مولفه مورد نظر پیدا نشد" });
+    }
+
+    await component.destroy();
+    res.status(200).json({ message: "مولفه با موفقیت حذف شد" });
+  } catch (error) {
+    console.error("خطا در حذف مولفه:", error);
+    res.status(500).json({ error: "مشکلی در حذف مولفه به وجود آمد" });
   }
 };
 

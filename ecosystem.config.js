@@ -12,20 +12,11 @@ module.exports = {
     out_file: './logs/out.log',
     log_file: './logs/combined.log',
     time: true,
+    autorestart: true,
     watch: false,
-    max_memory_restart: '1G',
+    max_memory_restart: '500M',
     env_production: {
       NODE_ENV: 'production'
-    },
-    // Restart settings
-    exp_backoff_restart_delay: 100,
-    autorestart: true,
-    max_restarts: 10,
-    min_uptime: '10s',
-    // Graceful shutdown
-    kill_timeout: 5000,
-    wait_ready: true,
-    listen_timeout: 3000
+    }
   }]
 };
-

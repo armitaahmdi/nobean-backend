@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    excerpt: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     image: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -33,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON, // آرایه‌ای از آبجکت‌ها
       allowNull: true,
     },
-    faq: {
+    faqs: {
       type: DataTypes.JSON,
       allowNull: true,
     },
@@ -52,6 +56,16 @@ module.exports = (sequelize, DataTypes) => {
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM('draft', 'published', 'archived'),
+      defaultValue: 'draft',
+      allowNull: false,
+    },
+    views: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
     },
   });
 

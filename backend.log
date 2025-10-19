@@ -1,0 +1,1061 @@
+
+> nobean@1.0.0 dev
+> NODE_ENV=development cp env.local .env && nodemon server.js
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+(node:134871) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Database connection success
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+(node:136081) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+(node:138557) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Database connection success
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+(node:138894) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Database connection success
+❌ Problem connecting to database: Error
+    at Database.<anonymous> (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/sqlite/query.js:185:27)
+    at /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/sqlite/query.js:183:50
+    at new Promise (<anonymous>)
+    at Query.run (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/sqlite/query.js:183:12)
+    at /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:315:28
+    at async SQLiteQueryInterface.changeColumn (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/sqlite/query-interface.js:43:7)
+    at async domain.sync (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/model.js:984:11)
+    at async Sequelize.sync (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:377:9) {
+  name: 'SequelizeDatabaseError',
+  parent: [Error: SQLITE_READONLY: attempt to write a readonly database] {
+    errno: 8,
+    code: 'SQLITE_READONLY',
+    sql: 'CREATE TABLE IF NOT EXISTS `domains` (`id` INTEGER PRIMARY KEY, `examId` BIGINT NOT NULL REFERENCES `exams` (`id`), `name` VARCHAR(255) NOT NULL, `description` TEXT, `order` INTEGER DEFAULT 0, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);'
+  },
+  original: [Error: SQLITE_READONLY: attempt to write a readonly database] {
+    errno: 8,
+    code: 'SQLITE_READONLY',
+    sql: 'CREATE TABLE IF NOT EXISTS `domains` (`id` INTEGER PRIMARY KEY, `examId` BIGINT NOT NULL REFERENCES `exams` (`id`), `name` VARCHAR(255) NOT NULL, `description` TEXT, `order` INTEGER DEFAULT 0, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);'
+  },
+  sql: 'CREATE TABLE IF NOT EXISTS `domains` (`id` INTEGER PRIMARY KEY, `examId` BIGINT NOT NULL REFERENCES `exams` (`id`), `name` VARCHAR(255) NOT NULL, `description` TEXT, `order` INTEGER DEFAULT 0, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);',
+  parameters: {}
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+(node:140450) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (4) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.1] injecting env (4) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.1] injecting env (4) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+(node:141298) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (4) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+(node:141313) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.1] injecting env (4) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+(node:141344) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.1] injecting env (4) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (4) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+(node:141427) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (11) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (4) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+(node:141588) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+(node:141908) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (6) from .env.local -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+(node:142234) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (6) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+(node:142805) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (6) from .env.local -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+(node:143027) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (6) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+(node:143148) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+(node:143752) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+(node:144351) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[32m[nodemon] restarting due to changes...[39m
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+(node:144405) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+(node:145003) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+(node:147338) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+(node:147706) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+(node:147748) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+(node:147814) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+(node:148421) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+(node:149496) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+[dotenv@17.2.1] injecting env (9) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+(node:152724) Warning: Accessing non-existent property 'sequelize' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ Problem connecting to database: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async Sequelize.authenticate (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:457:5) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+🧹 در حال پاکسازی Cartهای قدیمی...
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+❌ خطا در Cron Job: ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async ConnectionManager._connect (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/sequelize.js:305:26
+    at async MySQLQueryInterface.bulkDelete (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/dialects/abstract/query-interface.js:403:12)
+    at async cart.destroy (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/sequelize/lib/model.js:1838:16)
+    at async /media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/src/utils/cronjobs/createOldCart.js:14:5
+    at async Timeout._onTimeout (/media/armita/25e5d571-5359-46f7-84db-d6402f1ac313/nobean-v3/nobean-back/nobean/node_modules/node-cron/dist/cjs/scheduler/runner.js:70:44) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}

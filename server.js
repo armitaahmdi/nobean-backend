@@ -98,6 +98,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const sequelize = require('./config/db');
+const { corsOptions, corsMiddleware } = require('./src/config/cors');
 require("./src/utils/cronjobs/createOldCart");
 
 const app = express();
@@ -112,6 +113,7 @@ const commentRouter = require("./src/router/commentRouter");
 const categoryRouter = require("./src/router/categoryRouter");
 const uploadRouter = require("./src/router/uploadRouter");
 const userRouter = require("./src/router/userRouter");
+const articleRouter = require("./src/router/articleRouter");
 
 // Swagger
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger');
@@ -127,28 +129,9 @@ app.use(helmet({
 // Serve static uploads
 app.use('/uploads', express.static('uploads'));
 
-// CORS
-const allowedOrigins = [
-  'https://36b57023baaf.ngrok-free.app',
-  'http://localhost:8888',
-  'http://localhost:5173',
-  'https://nobean.ir',
-  'https://www.nobean.ir',
-  'https://api.nobean.ir'
-];
-
-const corsOptions = {
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true); // Postman, curl
-    if(allowedOrigins.includes(origin)) callback(null, true);
-    else callback(new Error('Not allowed by CORS'));
-  },
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-auth-token'],
-  credentials: true
-};
-
+// CORS Configuration
 app.use(cors(corsOptions));
+app.use(corsMiddleware);
 
 // Session
 app.use(sessions({
@@ -169,6 +152,8 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/carts", cartRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/articles", articleRouter);
+app.use("/api/v1/admin/articles", articleRouter);
 app.use("/api/v1", uploadRouter);
 
 // Health check

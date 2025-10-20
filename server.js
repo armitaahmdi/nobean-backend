@@ -98,7 +98,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const sequelize = require('./config/db');
-const { corsOptions, corsMiddleware } = require('./src/config/cors');
+// const { corsOptions, corsMiddleware } = require('./src/config/cors');
 require("./src/utils/cronjobs/createOldCart");
 
 const app = express();
@@ -130,8 +130,8 @@ app.use(helmet({
 app.use('/uploads', express.static('uploads'));
 
 // CORS Configuration
-app.use(cors(corsOptions));
-app.use(corsMiddleware);
+// app.use(cors(corsOptions));
+// app.use(corsMiddleware);
 
 // Session
 app.use(sessions({

@@ -14,6 +14,7 @@ const allowedOrigins = [
   'https://nobean.ir',
   'https://www.nobean.ir',
   'https://api.nobean.ir',
+'http://nobean.ir',
   
   // Testing
   'https://36b57023baaf.ngrok-free.app'
@@ -66,7 +67,7 @@ const corsMiddleware = (req, res, next) => {
     
     res.header('Access-Control-Allow-Origin', origin || '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, x-auth-token, Accept, Origin');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, x-auth-token, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Cache-Control, Pragma');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Max-Age', '86400'); // 24 hours
     

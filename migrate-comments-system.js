@@ -9,6 +9,21 @@ async function migrateCommentsSystem() {
     await sequelize.authenticate();
     console.log('✅ اتصال به دیتابیس برقرار شد');
     
+    // پیدا کردن نام جدول users
+    const usersTableCheck = await sequelize.query(`
+      SELECT TABLE_NAME 
+      FROM INFORMATION_SCHEMA.TABLES 
+      WHERE TABLE_SCHEMA = DATABASE() 
+      AND TABLE_NAME IN ('users', 'user')
+    `, { type: QueryTypes.SELECT });
+    
+    const usersTableName = usersTableCheck.length > 0 ? usersTableCheck[0].TABLE_NAME : null;
+    if (usersTableName) {
+      console.log(`✓ جدول ${usersTableName} پیدا شد`);
+    } else {
+      console.log('⚠️ جدول users پیدا نشد، foreign key ها اضافه نمی‌شوند');
+    }
+    
     // 0. بررسی وجود جدول comments
     console.log('\n📝 بررسی وجود جدول comments...');
     const commentsTableCheck = await sequelize.query(`
@@ -20,27 +35,50 @@ async function migrateCommentsSystem() {
     
     if (commentsTableCheck.length === 0) {
       console.log('   ➕ ایجاد جدول comments...');
-      await sequelize.query(`
-        CREATE TABLE comments (
-          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-          user_id BIGINT NOT NULL,
-          text TEXT NOT NULL,
-          parent_comment_id BIGINT NULL,
-          section_type ENUM('course', 'test', 'product', 'podcast', 'article', 'webinar', 'consultant') NOT NULL,
-          section_id BIGINT NOT NULL,
-          idx INT NOT NULL DEFAULT 0,
-          likes_count INT NOT NULL DEFAULT 0,
-          dislikes_count INT NOT NULL DEFAULT 0,
-          status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
-          createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          KEY idx_user_id (user_id),
-          KEY idx_parent_comment_id (parent_comment_id),
-          KEY idx_section (section_type, section_id),
-          CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-          CONSTRAINT fk_comment_parent FOREIGN KEY (parent_comment_id) REFERENCES comments(id) ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-      `);
+      
+      if (usersTableName) {
+        await sequelize.query(`
+          CREATE TABLE comments (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            text TEXT NOT NULL,
+            parent_comment_id BIGINT NULL,
+            section_type ENUM('course', 'test', 'product', 'podcast', 'article', 'webinar', 'consultant') NOT NULL,
+            section_id BIGINT NOT NULL,
+            idx INT NOT NULL DEFAULT 0,
+            likes_count INT NOT NULL DEFAULT 0,
+            dislikes_count INT NOT NULL DEFAULT 0,
+            status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+            createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_user_id (user_id),
+            KEY idx_parent_comment_id (parent_comment_id),
+            KEY idx_section (section_type, section_id),
+            CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES ${usersTableName}(id) ON DELETE CASCADE,
+            CONSTRAINT fk_comment_parent FOREIGN KEY (parent_comment_id) REFERENCES comments(id) ON DELETE CASCADE
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        `);
+      } else {
+        await sequelize.query(`
+          CREATE TABLE comments (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            text TEXT NOT NULL,
+            parent_comment_id BIGINT NULL,
+            section_type ENUM('course', 'test', 'product', 'podcast', 'article', 'webinar', 'consultant') NOT NULL,
+            section_id BIGINT NOT NULL,
+            idx INT NOT NULL DEFAULT 0,
+            likes_count INT NOT NULL DEFAULT 0,
+            dislikes_count INT NOT NULL DEFAULT 0,
+            status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+            createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_user_id (user_id),
+            KEY idx_parent_comment_id (parent_comment_id),
+            KEY idx_section (section_type, section_id)
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        `);
+      }
       console.log('   ✅ جدول comments ایجاد شد');
     } else {
       console.log('   ✓ جدول comments قبلاً وجود دارد');
@@ -88,6 +126,9 @@ async function migrateCommentsSystem() {
     
     if (reactionsTableCheck.length === 0) {
       console.log('   ➕ ایجاد جدول comment_reactions...');
+      const fkUserConstraint = usersTableName 
+        ? `,\n          CONSTRAINT fk_reaction_user FOREIGN KEY (user_id) REFERENCES ${usersTableName}(id) ON DELETE CASCADE`
+        : '';
       await sequelize.query(`
         CREATE TABLE comment_reactions (
           id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -99,8 +140,7 @@ async function migrateCommentsSystem() {
           UNIQUE KEY unique_user_comment (comment_id, user_id),
           KEY idx_comment_id (comment_id),
           KEY idx_user_id (user_id),
-          CONSTRAINT fk_reaction_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
-          CONSTRAINT fk_reaction_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+          CONSTRAINT fk_reaction_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE${fkUserConstraint}
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
       `);
       console.log('   ✅ جدول comment_reactions ایجاد شد');
@@ -119,6 +159,9 @@ async function migrateCommentsSystem() {
     
     if (reportsTableCheck.length === 0) {
       console.log('   ➕ ایجاد جدول comment_reports...');
+      const fkUserConstraint = usersTableName 
+        ? `,\n          CONSTRAINT fk_report_user FOREIGN KEY (user_id) REFERENCES ${usersTableName}(id) ON DELETE CASCADE`
+        : '';
       await sequelize.query(`
         CREATE TABLE comment_reports (
           id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -129,8 +172,7 @@ async function migrateCommentsSystem() {
           updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           KEY idx_comment_id (comment_id),
           KEY idx_user_id (user_id),
-          CONSTRAINT fk_report_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
-          CONSTRAINT fk_report_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+          CONSTRAINT fk_report_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE${fkUserConstraint}
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
       `);
       console.log('   ✅ جدول comment_reports ایجاد شد');
@@ -149,6 +191,9 @@ async function migrateCommentsSystem() {
     
     if (notificationsTableCheck.length === 0) {
       console.log('   ➕ ایجاد جدول notifications...');
+      const fkUserConstraint = usersTableName 
+        ? `,\n          CONSTRAINT fk_notification_user FOREIGN KEY (user_id) REFERENCES ${usersTableName}(id) ON DELETE CASCADE`
+        : '';
       await sequelize.query(`
         CREATE TABLE notifications (
           id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -165,8 +210,7 @@ async function migrateCommentsSystem() {
           KEY idx_user_id (user_id),
           KEY idx_is_read (is_read),
           KEY idx_created_at (createdAt),
-          CONSTRAINT fk_notification_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
-          CONSTRAINT fk_notification_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+          CONSTRAINT fk_notification_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE${fkUserConstraint}
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
       `);
       console.log('   ✅ جدول notifications ایجاد شد');

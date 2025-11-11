@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router()
 const isAdmin = require("../middelware/isAdmin")
 const authMiddleware = require("../middelware/authMiddelware");
+const optionalAuthMiddleware = require("../middelware/optionalAuthMiddelware");
 const CommentController = require('../controller/commentController'); // مسیر به controller
 /**
  * @swagger
@@ -109,7 +110,7 @@ const CommentController = require('../controller/commentController'); // مسی�
  *                   example: "خطای داخلی سرور"
  */
 
-router.get("/", CommentController.getCommentsBySection);
+router.get("/", optionalAuthMiddleware, CommentController.getCommentsBySection);
 
 /**
  * @swagger
@@ -514,6 +515,25 @@ router.put("/:id", authMiddleware, CommentController.updateComment);
 
 // حذف کامنت (  ادمین)
 router.delete("/:id", authMiddleware, isAdmin,CommentController.deleteComment);
+
+// like/dislike (toggle)
+router.post('/:id/like', authMiddleware, (req, res, next) => {
+  req.body.type = 'like';
+  return CommentController.reactToComment(req, res, next);
+});
+router.post('/:id/dislike', authMiddleware, (req, res, next) => {
+  req.body.type = 'dislike';
+  return CommentController.reactToComment(req, res, next);
+});
+
+// report
+router.post('/:id/report', authMiddleware, CommentController.reportComment);
+
+// دریافت کامنت‌های جدید برای ادمین
+router.get('/admin/recent', authMiddleware, isAdmin, CommentController.getRecentComments);
+
+// تایید یا رد کامنت (برای ادمین)
+router.post('/:id/moderate', authMiddleware, isAdmin, CommentController.moderateComment);
 
 module.exports = router;
 

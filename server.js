@@ -98,7 +98,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const sequelize = require('./config/db');
-// const { corsOptions, corsMiddleware } = require('./src/config/cors');
+const { corsOptions, corsMiddleware } = require('./src/config/cors');
 require("./src/utils/cronjobs/createOldCart");
 
 const app = express();
@@ -114,6 +114,7 @@ const categoryRouter = require("./src/router/categoryRouter");
 const uploadRouter = require("./src/router/uploadRouter");
 const userRouter = require("./src/router/userRouter");
 const articleRouter = require("./src/router/articleRouter");
+const notificationRouter = require("./src/router/notificationRouter");
 
 // Swagger
 const { swaggerUi, swaggerSpec } = require('./src/utils/swagger');
@@ -130,8 +131,8 @@ app.use(helmet({
 app.use('/uploads', express.static('uploads'));
 
 // CORS Configuration
-// app.use(cors(corsOptions));
-// app.use(corsMiddleware);
+app.use(cors(corsOptions));
+app.use(corsMiddleware);
 
 // Session
 app.use(sessions({
@@ -154,6 +155,7 @@ app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/articles", articleRouter);
 app.use("/api/v1/admin/articles", articleRouter);
+app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1", uploadRouter);
 
 // Health check

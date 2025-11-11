@@ -25,6 +25,8 @@ db.OrderItem = require('./carts/orders/orderItemModel')(sequelize, DataTypes);
 db.Cart = require('./carts/cartModel')(sequelize, DataTypes);
 db.CartItem = require('./carts/cartItemModel')(sequelize, DataTypes);
 db.Comment = require('./comments/commentModel')(sequelize, DataTypes);
+db.CommentReaction = require('./comments/commentReactionModel')(sequelize, DataTypes);
+db.CommentReport = require('./comments/commentReportModel')(sequelize, DataTypes);
 db.Course = require('./courses/courseModel')(sequelize, DataTypes);
 db.CourseUser = require('./courses/courseUserModel')(sequelize, DataTypes);
 db.CategoryCourse = require('./courses/categoryCourseModel')(sequelize, DataTypes);
@@ -32,6 +34,7 @@ db.Podcast = require('./podcasts/podcastModel')(sequelize, DataTypes);
 db.Otp = require('./otp/otpModel')(sequelize, DataTypes);
 db.ExamResult = require('./tests/examResultModel')(sequelize, DataTypes);
 db.Webinar = require('./WebinarModel')(sequelize, DataTypes);
+db.Notification = require('./notifications/notificationModel')(sequelize, DataTypes);
 
 // روابط آزمون و سوالات
 db.Exam.hasMany(db.Question, { foreignKey: 'examId', onDelete: 'CASCADE' });
@@ -120,6 +123,26 @@ db.Comment.belongsTo(db.User, { foreignKey: 'user_id' });
 // Comment self-relation (Replies)
 db.Comment.hasMany(db.Comment, { foreignKey: 'parent_comment_id', as: 'Replies' });
 db.Comment.belongsTo(db.Comment, { foreignKey: 'parent_comment_id', as: 'Parent' });
+
+// Comment ↔ CommentReaction
+db.Comment.hasMany(db.CommentReaction, { foreignKey: 'comment_id', onDelete: 'CASCADE', as: 'Reactions' });
+db.CommentReaction.belongsTo(db.Comment, { foreignKey: 'comment_id', as: 'Comment' });
+db.User.hasMany(db.CommentReaction, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.CommentReaction.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// Comment ↔ CommentReport
+db.Comment.hasMany(db.CommentReport, { foreignKey: 'comment_id', onDelete: 'CASCADE', as: 'Reports' });
+db.CommentReport.belongsTo(db.Comment, { foreignKey: 'comment_id', as: 'Comment' });
+db.User.hasMany(db.CommentReport, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.CommentReport.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// Notification ↔ Comment
+db.Comment.hasMany(db.Notification, { foreignKey: 'comment_id', onDelete: 'CASCADE', as: 'Notifications' });
+db.Notification.belongsTo(db.Comment, { foreignKey: 'comment_id', as: 'Comment' });
+
+// Notification ↔ User (optional - برای ادمین خاص)
+db.User.hasMany(db.Notification, { foreignKey: 'user_id', onDelete: 'CASCADE', as: 'Notifications' });
+db.Notification.belongsTo(db.User, { foreignKey: 'user_id', as: 'User' });
 
 module.exports = db;
 

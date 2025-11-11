@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     section_type: {
-      type: DataTypes.ENUM('course', 'test', 'product', 'podcast'), // course, exam, lesson, ...
+      type: DataTypes.ENUM('course', 'test', 'product', 'podcast', 'article', 'webinar', 'consultant'), // قابل گسترش
       allowNull: false,
     },
     section_id: {
@@ -29,6 +29,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
+    },
+    likes_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    dislikes_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    status: {
+      type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+      allowNull: false,
+      defaultValue: 'pending',
     },
   }, {
     timestamps: true, // createdAt و updatedAt

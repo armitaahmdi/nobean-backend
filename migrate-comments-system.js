@@ -9,35 +9,72 @@ async function migrateCommentsSystem() {
     await sequelize.authenticate();
     console.log('✅ اتصال به دیتابیس برقرار شد');
     
-    // 1. بررسی و اضافه کردن فیلد status به جدول comments
-    console.log('\n📝 بررسی فیلد status در جدول comments...');
-    const statusCheck = await sequelize.query(`
-      SELECT COLUMN_NAME 
-      FROM INFORMATION_SCHEMA.COLUMNS 
+    // 0. بررسی وجود جدول comments
+    console.log('\n📝 بررسی وجود جدول comments...');
+    const commentsTableCheck = await sequelize.query(`
+      SELECT TABLE_NAME 
+      FROM INFORMATION_SCHEMA.TABLES 
       WHERE TABLE_SCHEMA = DATABASE() 
-      AND TABLE_NAME = 'comments' 
-      AND COLUMN_NAME = 'status'
+      AND TABLE_NAME = 'comments'
     `, { type: QueryTypes.SELECT });
     
-    if (statusCheck.length === 0) {
-      console.log('   ➕ اضافه کردن فیلد status...');
+    if (commentsTableCheck.length === 0) {
+      console.log('   ➕ ایجاد جدول comments...');
       await sequelize.query(`
-        ALTER TABLE comments 
-        ADD COLUMN status ENUM('pending', 'approved', 'rejected') 
-        NOT NULL DEFAULT 'pending' 
-        COMMENT 'Comment status for moderation'
+        CREATE TABLE comments (
+          id BIGINT AUTO_INCREMENT PRIMARY KEY,
+          user_id BIGINT NOT NULL,
+          text TEXT NOT NULL,
+          parent_comment_id BIGINT NULL,
+          section_type ENUM('course', 'test', 'product', 'podcast', 'article', 'webinar', 'consultant') NOT NULL,
+          section_id BIGINT NOT NULL,
+          idx INT NOT NULL DEFAULT 0,
+          likes_count INT NOT NULL DEFAULT 0,
+          dislikes_count INT NOT NULL DEFAULT 0,
+          status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+          createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          KEY idx_user_id (user_id),
+          KEY idx_parent_comment_id (parent_comment_id),
+          KEY idx_section (section_type, section_id),
+          CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+          CONSTRAINT fk_comment_parent FOREIGN KEY (parent_comment_id) REFERENCES comments(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
       `);
-      console.log('   ✅ فیلد status اضافه شد');
-      
-      // به‌روزرسانی کامنت‌های موجود به وضعیت approved
-      const [updateResults] = await sequelize.query(`
-        UPDATE comments 
-        SET status = 'approved' 
-        WHERE status = 'pending'
-      `);
-      console.log(`   ✅ ${updateResults.affectedRows || 0} کامنت به وضعیت approved تغییر یافت`);
+      console.log('   ✅ جدول comments ایجاد شد');
     } else {
-      console.log('   ✓ فیلد status قبلاً وجود دارد');
+      console.log('   ✓ جدول comments قبلاً وجود دارد');
+      
+      // 1. بررسی و اضافه کردن فیلد status به جدول comments
+      console.log('\n📝 بررسی فیلد status در جدول comments...');
+      const statusCheck = await sequelize.query(`
+        SELECT COLUMN_NAME 
+        FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = DATABASE() 
+        AND TABLE_NAME = 'comments' 
+        AND COLUMN_NAME = 'status'
+      `, { type: QueryTypes.SELECT });
+      
+      if (statusCheck.length === 0) {
+        console.log('   ➕ اضافه کردن فیلد status...');
+        await sequelize.query(`
+          ALTER TABLE comments 
+          ADD COLUMN status ENUM('pending', 'approved', 'rejected') 
+          NOT NULL DEFAULT 'pending' 
+          COMMENT 'Comment status for moderation'
+        `);
+        console.log('   ✅ فیلد status اضافه شد');
+        
+        // به‌روزرسانی کامنت‌های موجود به وضعیت approved
+        const [updateResults] = await sequelize.query(`
+          UPDATE comments 
+          SET status = 'approved' 
+          WHERE status = 'pending'
+        `);
+        console.log(`   ✅ ${updateResults.affectedRows || 0} کامنت به وضعیت approved تغییر یافت`);
+      } else {
+        console.log('   ✓ فیلد status قبلاً وجود دارد');
+      }
     }
     
     // 2. بررسی و ایجاد جدول comment_reactions
